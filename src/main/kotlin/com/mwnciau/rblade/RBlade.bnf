@@ -1,0 +1,21 @@
+{
+  parserClass="com.mwnciau.rblade.parser.RBladeParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="RBlade"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.mwnciau.rblade.psi"
+  psiImplPackage="com.mwnciau.rblade.psi.impl"
+
+  elementTypeHolderClass="com.mwnciau.rblade.psi.RBladeTypes"
+  elementTypeClass="com.mwnciau.rblade.psi.RBladeElementType"
+  tokenTypeClass="com.mwnciau.rblade.psi.RBladeTokenType"
+}
+
+rbladeFile ::= item_*
+
+private item_ ::= (statement|HTML_TEMPLATE|COMMENT)
+
+statement ::= RBLADE_STATEMENT (RUBY_TEMPLATE+ RBLADE_STATEMENT)?
+
