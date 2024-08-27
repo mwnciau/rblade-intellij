@@ -41,8 +41,11 @@
         <editorHighlighterProvider
             filetype="RBlade File"
             implementationClass="com.mwnciau.rblade.highlighter.RBladeEditorHighlighterProvider"/>
-      <completion.contributor
-          language="RBlade"
-          implementationClass="com.mwnciau.rblade.completion.RBladeCompletionContributor"/>
+        <completion.contributor
+            language="RBlade"
+            implementationClass="com.mwnciau.rblade.completion.RBladeCompletionContributor"/>
+        <lang.fileViewProviderFactory
+            language="RBlade"
+            implementationClass="com.mwnciau.rblade.RBladeFileViewProviderFactory"/>
     </extensions>
 </idea-plugin>
