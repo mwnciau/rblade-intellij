@@ -47,5 +47,8 @@
         <lang.fileViewProviderFactory
             language="RBlade"
             implementationClass="com.mwnciau.rblade.RBladeFileViewProviderFactory"/>
+        <lang.inspectionSuppressor
+            language="HTML"
+            implementationClass="com.mwnciau.rblade.inspections.HtmlInspectionSuppressor"/>
     </extensions>
 </idea-plugin>
