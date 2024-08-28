@@ -7,6 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public class RBladeVisitor extends PsiElementVisitor {
 
+  public void visitRubyTemplate(@NotNull RBladeRubyTemplate o) {
+    visitPsiElement(o);
+  }
+
   public void visitStatement(@NotNull RBladeStatement o) {
     visitPsiElement(o);
   }

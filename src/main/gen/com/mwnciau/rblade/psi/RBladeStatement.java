@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface RBladeStatement extends PsiElement {
 
+  @Nullable
+  RBladeRubyTemplate getRubyTemplate();
+
 }

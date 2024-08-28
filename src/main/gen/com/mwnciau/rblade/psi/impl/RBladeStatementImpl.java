@@ -27,4 +27,10 @@ public class RBladeStatementImpl extends ASTWrapperPsiElement implements RBladeS
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public RBladeRubyTemplate getRubyTemplate() {
+    return findChildByClass(RBladeRubyTemplate.class);
+  }
+
 }

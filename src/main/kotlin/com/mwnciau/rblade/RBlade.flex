@@ -78,21 +78,21 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
 }
 
 <RBLADE_PARAMETERS> {
-    \(                              { parentheses += 1; return RBladeTypes.RUBY_TEMPLATE; }
+    \(                              { parentheses += 1; return RBladeTypes.RUBY_EXPRESSION; }
     \)                              {
                                         parentheses -= 1;
                                         if (parentheses == 0) {
                                             yybegin(YYINITIAL);
                                             return RBladeTypes.RBLADE_STATEMENT;
                                         } else {
-                                            return RBladeTypes.RUBY_TEMPLATE;
+                                            return RBladeTypes.RUBY_EXPRESSION;
                                         }
                                     }
     \"|'|%[qQwWiIrsx]?.             {
                                         yybegin(RBLADE_PARAMETER_STRING_LITERAL);
                                         stringEndDelimiter = flipBracket(yycharat(yylength() - 1));
                                     }
-    [^(\"'%)]+                      { return RBladeTypes.RUBY_TEMPLATE; }
+    [^(\"'%)]+                      { return RBladeTypes.RUBY_EXPRESSION; }
 }
 
 <RBLADE_PARAMETER_STRING_LITERAL> {
@@ -102,7 +102,7 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
     .                               {
                                         if (yycharat(0) == stringEndDelimiter) {
                                             yybegin(RBLADE_PARAMETERS);
-                                            return RBladeTypes.RUBY_TEMPLATE;
+                                            return RBladeTypes.RUBY_EXPRESSION;
                                         }
                                     }
 }
@@ -113,11 +113,11 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
                                             yybegin(YYINITIAL);
                                             return RBladeTypes.RBLADE_STATEMENT;
                                         } else {
-                                            return RBladeTypes.RUBY_TEMPLATE;
+                                            return RBladeTypes.RUBY_EXPRESSION;
                                         }
                                     }
-    [^}%!@]+                        { return RBladeTypes.RUBY_TEMPLATE; }
-    [^]                             { return RBladeTypes.RUBY_TEMPLATE; }
+    [^}%!@]+                        { return RBladeTypes.RUBY_EXPRESSION; }
+    [^]                             { return RBladeTypes.RUBY_EXPRESSION; }
 }
 
 

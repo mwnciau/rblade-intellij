@@ -17,5 +17,7 @@ rbladeFile ::= item_*
 
 private item_ ::= (statement|HTML_TEMPLATE|COMMENT)
 
-statement ::= RBLADE_STATEMENT (RUBY_TEMPLATE+ RBLADE_STATEMENT)?
+statement ::= RBLADE_STATEMENT (ruby_template RBLADE_STATEMENT)?
+
+ruby_template ::= RUBY_EXPRESSION+
 

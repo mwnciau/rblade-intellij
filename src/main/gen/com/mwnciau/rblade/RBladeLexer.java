@@ -583,7 +583,7 @@ class RBladeLexer implements FlexLexer {
           // fall through
           case 17: break;
           case 2:
-            { return RBladeTypes.RUBY_TEMPLATE;
+            { return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 18: break;
@@ -599,7 +599,7 @@ class RBladeLexer implements FlexLexer {
           // fall through
           case 20: break;
           case 5:
-            { parentheses += 1; return RBladeTypes.RUBY_TEMPLATE;
+            { parentheses += 1; return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 21: break;
@@ -609,7 +609,7 @@ class RBladeLexer implements FlexLexer {
                                             yybegin(YYINITIAL);
                                             return RBladeTypes.RBLADE_STATEMENT;
                                         } else {
-                                            return RBladeTypes.RUBY_TEMPLATE;
+                                            return RBladeTypes.RUBY_EXPRESSION;
                                         }
             }
           // fall through
@@ -617,7 +617,7 @@ class RBladeLexer implements FlexLexer {
           case 7:
             { if (yycharat(0) == stringEndDelimiter) {
                                             yybegin(RBLADE_PARAMETERS);
-                                            return RBladeTypes.RUBY_TEMPLATE;
+                                            return RBladeTypes.RUBY_EXPRESSION;
                                         }
             }
           // fall through
@@ -647,7 +647,7 @@ class RBladeLexer implements FlexLexer {
                                             yybegin(YYINITIAL);
                                             return RBladeTypes.RBLADE_STATEMENT;
                                         } else {
-                                            return RBladeTypes.RUBY_TEMPLATE;
+                                            return RBladeTypes.RUBY_EXPRESSION;
                                         }
             }
           // fall through

@@ -50,5 +50,8 @@
         <lang.inspectionSuppressor
             language="HTML"
             implementationClass="com.mwnciau.rblade.inspections.HtmlInspectionSuppressor"/>
+        <languageInjectionContributor
+            language="RBlade"
+            implementationClass="com.mwnciau.rblade.injection.RubyLanguageInjectorContributor"/>
     </extensions>
 </idea-plugin>
