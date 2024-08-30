@@ -1,5 +1,6 @@
 package com.mwnciau.rblade.inspections
 
+import com.intellij.codeInsight.daemon.impl.analysis.XmlUnboundNsPrefixInspection
 import com.intellij.codeInspection.InspectionSuppressor
 import com.intellij.codeInspection.SuppressQuickFix
 import com.intellij.codeInspection.htmlInspections.HtmlUnknownTagInspection
@@ -11,7 +12,7 @@ import com.mwnciau.rblade.RBladeLanguage
 
 class HtmlInspectionSuppressor: InspectionSuppressor {
   companion object {
-    val SUPPRESSED_INSPECTIONS = listOf((CheckEmptyTagInspection()).getID(), (HtmlUnknownTagInspection()).getID());
+    val SUPPRESSED_INSPECTIONS = listOf(CheckEmptyTagInspection().id, HtmlUnknownTagInspection().id, XmlUnboundNsPrefixInspection().id);
   }
 
   override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {
