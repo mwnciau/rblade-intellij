@@ -4,6 +4,6 @@ import com.intellij.psi.tree.TokenSet
 
 interface RBladeTokenSets {
     companion object {
-        val COMMENTS: TokenSet = TokenSet.create(RBladeTypes.COMMENT, RBladeTypes.RUBY_EXPRESSION)
+        val COMMENTS: TokenSet = TokenSet.create(RBladeTypes.COMMENT)
     }
 }
