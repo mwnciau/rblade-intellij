@@ -8,7 +8,6 @@ import com.mwnciau.rblade.psi.impl.*;
 
 public interface RBladeTypes {
 
-  IElementType RUBY_TEMPLATE = new RBladeElementType("RUBY_TEMPLATE");
   IElementType STATEMENT = new RBladeElementType("STATEMENT");
 
   IElementType COMMENT = new RBladeTokenType("COMMENT");
@@ -19,10 +18,7 @@ public interface RBladeTypes {
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == RUBY_TEMPLATE) {
-        return new RBladeRubyTemplateImpl(node);
-      }
-      else if (type == STATEMENT) {
+      if (type == STATEMENT) {
         return new RBladeStatementImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);

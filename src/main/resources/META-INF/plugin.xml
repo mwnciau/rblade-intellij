@@ -53,5 +53,11 @@
         <languageInjectionContributor
             language="RBlade"
             implementationClass="com.mwnciau.rblade.injection.RubyLanguageInjectorContributor"/>
+
+        <internalFileTemplate name="Rblade File"/>
+    </extensions>
+    <extensions defaultExtensionNs="org.jetbrains.plugins.ruby">
+        <rails.viewFileTypesProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTypesProvider"/>
+        <rails.viewFileTemplateProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTemplateProvider"/>
     </extensions>
 </idea-plugin>

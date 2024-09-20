@@ -23,6 +23,6 @@ class RBladeEditorHighlighter(
         val rubyHighlighter =
             SyntaxHighlighterFactory.getSyntaxHighlighter(RubyLanguage.INSTANCE, project, virtualFile)
         val rubyLayer = LayerDescriptor(rubyHighlighter, "")
-        this.registerLayer(RBladeTypes.RUBY_TEMPLATE, rubyLayer)
+        this.registerLayer(RBladeTypes.RUBY_EXPRESSION, rubyLayer)
     }
 }
