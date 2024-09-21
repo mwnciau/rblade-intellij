@@ -20,9 +20,5 @@ class RBladeEditorHighlighter(
             SyntaxHighlighterFactory.getSyntaxHighlighter(HTMLLanguage.INSTANCE, project, virtualFile)
         val htmlLayer = LayerDescriptor(htmlHighlighter, "")
         this.registerLayer(RBladeTypes.HTML_TEMPLATE, htmlLayer)
-        val rubyHighlighter =
-            SyntaxHighlighterFactory.getSyntaxHighlighter(RubyLanguage.INSTANCE, project, virtualFile)
-        val rubyLayer = LayerDescriptor(rubyHighlighter, "")
-        this.registerLayer(RBladeTypes.RUBY_EXPRESSION, rubyLayer)
     }
 }
