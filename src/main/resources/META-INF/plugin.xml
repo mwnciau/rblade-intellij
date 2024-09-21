@@ -50,8 +50,9 @@
         <lang.inspectionSuppressor
             language="HTML"
             implementationClass="com.mwnciau.rblade.inspections.HtmlInspectionSuppressor"/>
-
-        <internalFileTemplate name="Rblade File"/>
+        <liveTemplateContext contextId="RBlade" implementation="com.mwnciau.rblade.RBladeLiveTemplateContextType" />
+        <internalFileTemplate name="RBlade File"/>
+        <html.compatibleLanguage language="RBlade"/>
     </extensions>
     <extensions defaultExtensionNs="org.jetbrains.plugins.ruby">
         <rails.viewFileTypesProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTypesProvider"/>
