@@ -4,7 +4,6 @@ import com.intellij.codeInsight.completion.CompletionContributor
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.patterns.PlatformPatterns
 import com.mwnciau.rblade.psi.RBladeTypes
-import org.jetbrains.plugins.ruby.ruby.codeInsight.completion.RubyCompletionProvider
 
 class RBladeCompletionContributor : CompletionContributor() {
   init {

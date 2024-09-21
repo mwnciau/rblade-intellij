@@ -1,7 +1,6 @@
 package com.mwnciau.rblade.highlighter
 
 import com.intellij.lang.html.HTMLLanguage
-import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
 import com.intellij.openapi.editor.colors.EditorColorsScheme
 import com.intellij.openapi.editor.ex.util.LayerDescriptor
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter

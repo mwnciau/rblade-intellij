@@ -5,7 +5,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.mwnciau.rblade.RBladeFileType
-import org.jetbrains.plugins.ruby.RBundle
 import org.jetbrains.plugins.ruby.rails.templates.RailsViewFileTemplateProvider
 
 class RBladeRailsViewFileTemplateProvider : RailsViewFileTemplateProvider {
