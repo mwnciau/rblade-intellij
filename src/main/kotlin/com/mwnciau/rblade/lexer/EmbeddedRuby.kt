@@ -4,6 +4,7 @@ import com.intellij.lexer.Lexer
 import com.intellij.lexer.LexerBase
 import com.intellij.psi.tree.IElementType
 import com.mwnciau.rblade.RBladeLexerAdapter
+import com.mwnciau.rblade.psi.RBladeTypes
 import com.mwnciau.rblade.psi.RBladeTypes.RUBY_EXPRESSION
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
 import org.jetbrains.plugins.ruby.ruby.lang.lexer.RubyLexer
@@ -32,8 +33,13 @@ class EmbeddedRuby : LexerBase() {
   override fun getTokenType(): IElementType? {
     val tokenType = lexer().tokenType;
 
-    if (tokenType != null && tokenType.language != RubyLanguage.INSTANCE) {
-        return RubyTokenTypes.tWHITE_SPACE_WITH_NEWLINE
+    if (tokenType != null) {
+      if (tokenType == RBladeTypes.COMMENT) {
+        return RubyTokenTypes.TLINE_COMMENT
+      }
+      if (tokenType.language != RubyLanguage.INSTANCE) {
+          return RubyTokenTypes.tWHITE_SPACE_WITH_NEWLINE
+      }
     }
 
     return tokenType
