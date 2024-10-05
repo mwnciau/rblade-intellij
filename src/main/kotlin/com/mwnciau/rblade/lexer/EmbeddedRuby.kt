@@ -38,7 +38,7 @@ class EmbeddedRuby : LexerBase() {
         return RubyTokenTypes.TLINE_COMMENT
       }
       if (tokenType.language != RubyLanguage.INSTANCE) {
-          return RubyTokenTypes.tWHITE_SPACE_WITH_NEWLINE
+          return RubyTokenTypes.tBLOCK_COMMENT
       }
     }
 
