@@ -8,6 +8,7 @@ import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.mwnciau.rblade.psi.RBladeTypes;
 import com.intellij.psi.TokenType;import kotlinx.html.RUBY;
+import java.util.ArrayDeque;
 
 
 class RBladeLexer implements FlexLexer {
@@ -20,9 +21,10 @@ class RBladeLexer implements FlexLexer {
 
   /** lexical states */
   public static final int YYINITIAL = 0;
-  public static final int RBLADE_PARAMETERS = 2;
-  public static final int RBLADE_PARAMETER_STRING_LITERAL = 4;
-  public static final int RUBY_BLOCK = 6;
+  public static final int STATE_RUBY_BLOCK = 2;
+  public static final int STATE_RUBY_BLOCK_END = 4;
+  public static final int STATE_STRING_LITERAL = 6;
+  public static final int STATE_STRING_LITERAL_INTERPOLATION = 8;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -31,7 +33,7 @@ class RBladeLexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = {
-     0,  0,  1,  1,  2,  2,  3, 3
+     0,  0,  1,  1,  2,  2,  3,  3,  4, 4
   };
 
   /**
@@ -104,14 +106,15 @@ class RBladeLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\4\0\4\1\1\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\4\2\7\5\2\1\10\2\11\1\0\1\12\1\3"+
-    "\1\0\1\13\1\0\1\14\2\0\1\10\1\0\1\15"+
-    "\1\11\1\16\4\0\1\10\1\11\2\0\1\17\1\20"+
-    "\7\0\1\17";
+    "\5\0\4\1\2\2\1\3\1\2\1\4\1\5\2\2"+
+    "\3\6\1\7\2\6\3\10\1\2\1\11\1\2\1\12"+
+    "\1\13\1\14\2\15\1\0\1\16\1\2\1\3\3\0"+
+    "\1\17\1\2\1\11\1\0\1\14\1\0\1\20\1\15"+
+    "\1\21\4\0\1\14\1\15\3\0\1\22\1\23\13\0"+
+    "\1\22";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[57];
+    int [] result = new int[73];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -137,16 +140,18 @@ class RBladeLexer implements FlexLexer {
 
   private static final String ZZ_ROWMAP_PACKED_0 =
     "\0\0\0\34\0\70\0\124\0\160\0\214\0\250\0\304"+
-    "\0\340\0\374\0\u0118\0\374\0\374\0\374\0\374\0\u0134"+
-    "\0\u0150\0\u016c\0\u0188\0\u01a4\0\u01c0\0\u01dc\0\u01f8\0\u0214"+
-    "\0\u0230\0\u024c\0\u0268\0\u0284\0\u02a0\0\374\0\u01dc\0\374"+
-    "\0\u02bc\0\u02d8\0\u02f4\0\u0310\0\374\0\u032c\0\374\0\u0348"+
-    "\0\u0364\0\u0380\0\u039c\0\374\0\u03b8\0\u03d4\0\u03f0\0\u02d8"+
-    "\0\u0214\0\u040c\0\u0428\0\u0444\0\u0460\0\u047c\0\u0498\0\u04b4"+
-    "\0\u03d4";
+    "\0\340\0\374\0\u0118\0\u0134\0\u0150\0\u0134\0\u0134\0\u016c"+
+    "\0\u0188\0\u0134\0\u01a4\0\u01c0\0\u0134\0\u01dc\0\u01f8\0\u0134"+
+    "\0\u0214\0\u0230\0\u024c\0\u0134\0\u0268\0\u0134\0\u0134\0\u0284"+
+    "\0\u02a0\0\u02bc\0\u02d8\0\u02f4\0\u0310\0\u032c\0\u0348\0\u01f8"+
+    "\0\u0364\0\u0134\0\u0134\0\u0380\0\u039c\0\u03b8\0\u03d4\0\u0134"+
+    "\0\u03f0\0\u0134\0\u040c\0\u0428\0\u0444\0\u0460\0\u0134\0\u047c"+
+    "\0\u0498\0\u04b4\0\u04d0\0\u039c\0\u02a0\0\u04ec\0\u0508\0\u0524"+
+    "\0\u0540\0\u055c\0\u0578\0\u0594\0\u05b0\0\u05cc\0\u05e8\0\u0604"+
+    "\0\u0498";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[57];
+    int [] result = new int[73];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -169,34 +174,41 @@ class RBladeLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\12\5\1\6\2\5\1\7\14\5\1\10\1\5\4\11"+
-    "\1\12\1\11\1\13\1\14\1\15\23\11\2\16\1\17"+
-    "\2\16\1\20\21\16\1\21\4\16\3\22\1\23\2\22"+
-    "\1\24\6\22\1\25\15\22\1\26\12\5\1\0\2\5"+
-    "\1\0\14\5\1\0\1\5\6\0\1\27\43\0\6\30"+
-    "\1\31\2\30\1\0\1\30\1\31\5\0\1\32\26\0"+
-    "\1\33\1\0\4\11\1\0\1\11\3\0\23\11\34\0"+
-    "\2\12\1\0\17\12\1\34\6\12\1\34\2\12\32\0"+
-    "\1\35\1\0\2\36\1\0\31\36\3\22\1\0\2\22"+
-    "\1\0\6\22\1\0\15\22\4\0\1\37\44\0\1\40"+
-    "\40\0\1\41\45\0\1\40\5\0\1\42\5\0\1\43"+
-    "\21\0\1\44\5\0\1\45\6\0\11\30\1\0\2\30"+
-    "\3\0\1\44\5\0\1\45\6\0\7\30\1\46\1\30"+
-    "\1\0\2\30\5\0\1\47\41\0\1\50\22\0\2\12"+
-    "\1\0\31\12\33\51\24\0\1\52\10\0\6\42\1\53"+
-    "\25\42\13\0\1\54\21\0\1\44\5\0\1\45\25\0"+
-    "\1\44\5\0\1\45\6\0\1\30\1\55\7\30\1\0"+
-    "\2\30\13\0\1\56\22\0\33\51\1\36\20\0\1\57"+
-    "\13\0\6\42\1\53\5\42\1\60\17\42\1\0\1\44"+
-    "\5\0\1\45\6\0\10\30\1\61\1\0\2\30\2\0"+
-    "\11\56\1\62\22\56\24\0\1\63\3\0\1\64\1\63"+
-    "\2\0\11\56\1\65\22\56\25\0\1\66\32\0\1\63"+
-    "\4\0\1\63\2\0\11\56\1\65\21\56\1\67\17\0"+
-    "\1\70\14\0\11\56\1\62\21\56\1\71\26\0\1\40"+
-    "\5\0";
+    "\12\6\1\7\2\6\1\10\14\6\1\11\1\6\3\12"+
+    "\1\13\1\14\1\12\1\15\1\16\1\17\4\12\1\20"+
+    "\15\12\1\21\3\22\1\23\2\22\1\24\1\22\1\25"+
+    "\4\22\1\26\15\22\1\27\2\30\1\22\2\30\1\31"+
+    "\21\30\1\32\4\30\4\33\1\34\1\33\1\35\23\33"+
+    "\1\36\1\37\12\6\1\0\2\6\1\0\14\6\1\0"+
+    "\1\6\6\0\1\40\43\0\6\41\1\42\2\41\1\0"+
+    "\1\41\1\42\5\0\1\43\26\0\1\44\1\0\4\12"+
+    "\1\0\1\12\3\0\4\12\1\0\15\12\1\0\3\12"+
+    "\1\45\1\0\1\12\3\0\4\12\1\0\15\12\35\0"+
+    "\2\14\1\0\11\14\1\17\5\14\1\46\6\14\1\46"+
+    "\2\14\21\0\1\47\45\0\1\17\3\0\1\50\44\0"+
+    "\1\25\40\0\1\51\45\0\1\25\32\0\1\52\1\0"+
+    "\2\53\1\0\31\53\4\33\1\0\1\33\1\0\23\33"+
+    "\2\0\2\34\1\0\17\34\1\54\6\34\1\54\2\34"+
+    "\5\0\1\55\5\0\1\56\21\0\1\57\5\0\1\60"+
+    "\6\0\11\41\1\0\2\41\3\0\1\57\5\0\1\60"+
+    "\6\0\7\41\1\61\1\41\1\0\2\41\5\0\1\62"+
+    "\41\0\1\63\22\0\4\12\1\0\1\12\3\0\4\12"+
+    "\1\0\15\12\1\17\2\14\1\0\31\14\23\0\1\64"+
+    "\33\0\1\65\10\0\2\34\1\0\31\34\6\55\1\66"+
+    "\25\55\13\0\1\67\21\0\1\57\5\0\1\60\25\0"+
+    "\1\57\5\0\1\60\6\0\1\41\1\70\7\41\1\0"+
+    "\2\41\13\0\1\71\42\0\1\72\33\0\1\73\13\0"+
+    "\6\55\1\66\5\55\1\74\17\55\1\0\1\57\5\0"+
+    "\1\60\6\0\10\41\1\75\1\0\2\41\2\0\11\71"+
+    "\1\76\22\71\24\0\1\77\3\0\1\100\1\77\26\0"+
+    "\1\101\3\0\1\102\1\101\2\0\11\71\1\103\22\71"+
+    "\25\0\1\104\32\0\1\77\4\0\1\77\27\0\1\105"+
+    "\32\0\1\101\4\0\1\101\2\0\11\71\1\103\21\71"+
+    "\1\106\17\0\1\107\33\0\1\110\14\0\11\71\1\76"+
+    "\21\71\1\111\26\0\1\17\33\0\1\25\5\0";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[1232];
+    int [] result = new int[1568];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -234,13 +246,14 @@ class RBladeLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\4\0\5\1\1\11\1\1\4\11\12\1\1\0\2\1"+
-    "\1\0\1\11\1\0\1\11\2\0\1\1\1\0\1\11"+
-    "\1\1\1\11\4\0\1\11\1\1\2\0\2\1\7\0"+
-    "\1\1";
+    "\5\0\6\1\1\11\1\1\2\11\2\1\1\11\2\1"+
+    "\1\11\2\1\1\11\3\1\1\11\1\1\2\11\3\1"+
+    "\1\0\3\1\3\0\2\11\1\1\1\0\1\1\1\0"+
+    "\1\11\1\1\1\11\4\0\1\11\1\1\3\0\2\1"+
+    "\13\0\1\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[57];
+    int [] result = new int[73];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -308,7 +321,9 @@ class RBladeLexer implements FlexLexer {
 
   /* user code: */
     private int parentheses;
-    private char stringEndDelimiter;
+    private ArrayDeque<Integer> stateStack = new ArrayDeque<Integer>();
+    private ArrayDeque<Character> stringDelimiterStack = new ArrayDeque<Character>();
+    private boolean stringIsInterpolated;
     private String rubyBlockEndDelimiter;
 
     private char flipBracket(char bracket){
@@ -581,99 +596,134 @@ class RBladeLexer implements FlexLexer {
             { return RBladeTypes.HTML_TEMPLATE;
             }
           // fall through
-          case 17: break;
-          case 2:
-            { return RBladeTypes.RUBY_EXPRESSION;
-            }
-          // fall through
-          case 18: break;
-          case 3:
-            { yybegin(RBLADE_PARAMETER_STRING_LITERAL);
-                                        stringEndDelimiter = flipBracket(yycharat(yylength() - 1));
-            }
-          // fall through
-          case 19: break;
-          case 4:
-            { return TokenType.BAD_CHARACTER;
-            }
-          // fall through
           case 20: break;
-          case 5:
-            { parentheses += 1; return RBladeTypes.RUBY_EXPRESSION;
-            }
-          // fall through
-          case 21: break;
-          case 6:
-            { parentheses -= 1;
-                                        if (parentheses == 0) {
-                                            yybegin(YYINITIAL);
-                                            return RBladeTypes.RBLADE_STATEMENT;
-                                        } else {
-                                            return RBladeTypes.RUBY_EXPRESSION;
-                                        }
-            }
-          // fall through
-          case 22: break;
-          case 7:
-            { if (yycharat(0) == stringEndDelimiter) {
-                                            yybegin(RBLADE_PARAMETERS);
-                                            return RBladeTypes.RUBY_EXPRESSION;
-                                        }
-            }
-          // fall through
-          case 23: break;
-          case 8:
-            { yybegin(RUBY_BLOCK); rubyBlockEndDelimiter = "%>"; return RBladeTypes.RBLADE_STATEMENT;
-            }
-          // fall through
-          case 24: break;
-          case 9:
-            { return RBladeTypes.RBLADE_STATEMENT;
-            }
-          // fall through
-          case 25: break;
-          case 10:
-            { yybegin(RUBY_BLOCK); rubyBlockEndDelimiter = "}}"; return RBladeTypes.RBLADE_STATEMENT;
-            }
-          // fall through
-          case 26: break;
-          case 11:
+          case 2:
             { 
             }
           // fall through
-          case 27: break;
-          case 12:
-            { if (rubyBlockEndDelimiter.equals(yytext().toString().replace("_", "").toLowerCase())) {
-                                            yybegin(YYINITIAL);
-                                            return RBladeTypes.RBLADE_STATEMENT;
-                                        } else {
+          case 21: break;
+          case 3:
+            { stateStack.addFirst(STATE_RUBY_BLOCK);
+                                        stringDelimiterStack.addFirst(flipBracket(yycharat(yylength() - 1)));
+                                        stringIsInterpolated = yycharat(0) == '"' || (yylength() == 3 && yytext().toString().substring(0, 2) == "%Q");
+                                        yybegin(STATE_STRING_LITERAL);
+            }
+          // fall through
+          case 22: break;
+          case 4:
+            { stateStack.addFirst(STATE_RUBY_BLOCK);
+            }
+          // fall through
+          case 23: break;
+          case 5:
+            { if (
+                                          stateStack.getFirst() == STATE_RUBY_BLOCK_END
+                                          && rubyBlockEndDelimiter.equals(yytext().toString().replace("_", "").toLowerCase())
+                                        ) {
+                                            yypushback(yylength());
+                                            yybegin(stateStack.removeFirst());
                                             return RBladeTypes.RUBY_EXPRESSION;
+                                        }
+                                        if (yycharat(0) == ')') {
+                                            yybegin(stateStack.removeFirst());
                                         }
             }
           // fall through
+          case 24: break;
+          case 6:
+            { return TokenType.BAD_CHARACTER;
+            }
+          // fall through
+          case 25: break;
+          case 7:
+            { yybegin(YYINITIAL);
+                                      return RBladeTypes.RBLADE_STATEMENT;
+            }
+          // fall through
+          case 26: break;
+          case 8:
+            { if (yycharat(0) == stringDelimiterStack.getFirst()) {
+                                            stringDelimiterStack.removeFirst();
+                                            yybegin(stateStack.removeFirst());
+                                        }
+            }
+          // fall through
+          case 27: break;
+          case 9:
+            { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
+                                      stringDelimiterStack.addFirst(flipBracket(yycharat(yylength() - 1)));
+                                      yybegin(STATE_STRING_LITERAL);
+            }
+          // fall through
           case 28: break;
-          case 13:
-            { yybegin(RBLADE_PARAMETERS);
-                                        parentheses = 1;
-                                        return RBladeTypes.RBLADE_STATEMENT;
+          case 10:
+            { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
             }
           // fall through
           case 29: break;
-          case 14:
-            { yybegin(RUBY_BLOCK); rubyBlockEndDelimiter = "!!}"; return RBladeTypes.RBLADE_STATEMENT;
+          case 11:
+            { yybegin(stateStack.removeFirst());
             }
           // fall through
           case 30: break;
-          case 15:
-            { return RBladeTypes.COMMENT;
+          case 12:
+            { stateStack.addFirst(STATE_RUBY_BLOCK_END);
+                                        rubyBlockEndDelimiter = "%>";
+                                        yybegin(STATE_RUBY_BLOCK);
+                                        return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
           case 31: break;
-          case 16:
-            { yybegin(RUBY_BLOCK); rubyBlockEndDelimiter = "@endruby"; return RBladeTypes.RBLADE_STATEMENT;
+          case 13:
+            { return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
           case 32: break;
+          case 14:
+            { stateStack.addFirst(STATE_RUBY_BLOCK_END);
+                                        rubyBlockEndDelimiter = "}}";
+                                        yybegin(STATE_RUBY_BLOCK);
+                                        return RBladeTypes.RBLADE_STATEMENT;
+            }
+          // fall through
+          case 33: break;
+          case 15:
+            { if (stringIsInterpolated) {
+                                          stateStack.addFirst(STATE_STRING_LITERAL);
+                                          yybegin(STATE_STRING_LITERAL_INTERPOLATION);
+                                        }
+            }
+          // fall through
+          case 34: break;
+          case 16:
+            { stateStack.addFirst(STATE_RUBY_BLOCK_END);
+                                        rubyBlockEndDelimiter = ")";
+                                        yybegin(STATE_RUBY_BLOCK);
+                                        return RBladeTypes.RBLADE_STATEMENT;
+            }
+          // fall through
+          case 35: break;
+          case 17:
+            { stateStack.addFirst(STATE_RUBY_BLOCK_END);
+                                        rubyBlockEndDelimiter = "!!}";
+                                        yybegin(STATE_RUBY_BLOCK);
+                                        return RBladeTypes.RBLADE_STATEMENT;
+            }
+          // fall through
+          case 36: break;
+          case 18:
+            { return RBladeTypes.COMMENT;
+            }
+          // fall through
+          case 37: break;
+          case 19:
+            { stateStack.addFirst(STATE_RUBY_BLOCK_END);
+                                        rubyBlockEndDelimiter = "@endruby";
+                                        yybegin(STATE_RUBY_BLOCK);
+                                        return RBladeTypes.RBLADE_STATEMENT;
+            }
+          // fall through
+          case 38: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }
