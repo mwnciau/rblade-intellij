@@ -31,7 +31,7 @@ class RBladeFileViewProvider(
   }
 
   override fun getLanguages(): MutableSet<Language> {
-    return mutableSetOf(RBladeLanguage.INSTANCE, HTMLLanguage.INSTANCE, RubyLanguage.INSTANCE)
+    return mutableSetOf(RBladeLanguage.INSTANCE, RubyLanguage.INSTANCE, HTMLLanguage.INSTANCE)
   }
 
   override fun getTemplateDataLanguage(): Language {

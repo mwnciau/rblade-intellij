@@ -5,6 +5,7 @@ import com.intellij.lexer.LexerBase
 import com.intellij.psi.tree.IElementType
 import com.mwnciau.rblade.RBladeLexerAdapter
 import com.mwnciau.rblade.psi.RBladeTypes
+import com.mwnciau.rblade.psi.RBladeTypes.RBLADE_STATEMENT
 import com.mwnciau.rblade.psi.RBladeTypes.RUBY_EXPRESSION
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
 import org.jetbrains.plugins.ruby.ruby.lang.lexer.RubyLexer
@@ -37,8 +38,11 @@ class EmbeddedRuby : LexerBase() {
       if (tokenType == RBladeTypes.COMMENT) {
         return RubyTokenTypes.TLINE_COMMENT
       }
+      if (tokenType == RBLADE_STATEMENT) {
+        return RubyTokenTypes.tWHITE_SPACE_WITH_NEWLINE
+      }
       if (tokenType.language != RubyLanguage.INSTANCE) {
-          return RubyTokenTypes.tBLOCK_COMMENT
+        return RubyTokenTypes.tWHITE_SPACE_WITH_NEWLINE
       }
     }
 
@@ -62,6 +66,9 @@ class EmbeddedRuby : LexerBase() {
       }
     } else {
       rbladeLexer.advance()
+      while (rbladeLexer.tokenType != null && rbladeLexer.tokenType != RUBY_EXPRESSION && rbladeLexer.tokenType != RBLADE_STATEMENT) {
+        rbladeLexer.advance()
+      }
 
       if (rbladeLexer.tokenType == RUBY_EXPRESSION){
         rubyLexer.start(bufferSequence, rbladeLexer.tokenStart, rbladeLexer.tokenEnd)
