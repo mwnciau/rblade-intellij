@@ -8,6 +8,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.mwnciau.rblade.psi.RBladeTypes
+import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
 
 class RBladeEditorHighlighter(
     project: Project?,
@@ -19,5 +20,9 @@ class RBladeEditorHighlighter(
             SyntaxHighlighterFactory.getSyntaxHighlighter(HTMLLanguage.INSTANCE, project, virtualFile)
         val htmlLayer = LayerDescriptor(htmlHighlighter, "")
         this.registerLayer(RBladeTypes.HTML_TEMPLATE, htmlLayer)
+        val rubyHighlighter =
+            SyntaxHighlighterFactory.getSyntaxHighlighter(RubyLanguage.INSTANCE, project, virtualFile)
+        val rubyLayer = LayerDescriptor(rubyHighlighter, "")
+        this.registerLayer(RBladeTypes.RUBY_EXPRESSION, rubyLayer)
     }
 }
