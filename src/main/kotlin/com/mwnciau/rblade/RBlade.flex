@@ -136,8 +136,8 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
                                           yybegin(STATE_STRING_LITERAL_INTERPOLATION);
                                         }
                                     }
-    \\.                             { }
-    .                               {
+    \\[^]                           { }
+    [^]                             {
                                         if (yycharat(0) == stringDelimiterStack.getFirst()) {
                                             stringDelimiterStack.removeFirst();
                                             yybegin(stateStack.removeFirst());
