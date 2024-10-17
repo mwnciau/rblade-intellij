@@ -38,11 +38,8 @@ class EmbeddedRuby : LexerBase() {
       if (tokenType == RBladeTypes.COMMENT) {
         return RubyTokenTypes.TLINE_COMMENT
       }
-      if (tokenType == RBLADE_STATEMENT) {
-        return RubyTokenTypes.tWHITE_SPACE_WITH_NEWLINE
-      }
       if (tokenType.language != RubyLanguage.INSTANCE) {
-        return RubyTokenTypes.tWHITE_SPACE_WITH_NEWLINE
+        return RubyTokenTypes.tEOL
       }
     }
 
