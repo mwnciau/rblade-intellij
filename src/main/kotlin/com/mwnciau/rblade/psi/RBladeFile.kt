@@ -5,13 +5,8 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
 import com.mwnciau.rblade.RBladeFileType
 import com.mwnciau.rblade.RBladeLanguage
+import org.jetbrains.plugins.ruby.ruby.lang.psi.RFile
 
-class RBladeFile(viewProvider: FileViewProvider): PsiFileBase(viewProvider, RBladeLanguage.INSTANCE) {
-    override fun getFileType(): FileType {
-        return RBladeFileType.INSTANCE
-    }
-
-    override fun toString(): String {
-        return "RBlade File"
-    }
+interface RBladeFile : RFile {
+    fun getInnerRubyFile(): RFile
 }

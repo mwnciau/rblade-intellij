@@ -1,9 +1,10 @@
 package com.mwnciau.rblade
 
 import com.intellij.openapi.fileTypes.LanguageFileType
+import org.jetbrains.plugins.ruby.ruby.lang.AbstractRubyFileType
 import javax.swing.Icon
 
-class RBladeFileType private constructor() : LanguageFileType(RBladeLanguage.INSTANCE) {
+class RBladeFileType private constructor() : AbstractRubyFileType(RBladeLanguage.INSTANCE) {
     companion object {
         val INSTANCE = RBladeFileType()
     }

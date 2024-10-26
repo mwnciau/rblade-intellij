@@ -1,16 +1,28 @@
 package com.mwnciau.rblade
 
+import RBladeElementTypes
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageParserDefinitions
 import com.intellij.lang.html.HTMLLanguage
+import com.intellij.lang.xml.XMLLanguage
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.fileTypes.FileTypeManager
+import com.intellij.openapi.fileTypes.LanguageFileType
+import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.LanguageSubstitutors
 import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.impl.source.PsiFileImpl
-import com.intellij.psi.templateLanguages.ConfigurableTemplateLanguageFileViewProvider
+import com.intellij.psi.templateLanguages.TemplateLanguage
+import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider
 import com.intellij.psi.tree.IElementType
-import com.mwnciau.rblade.psi.*
+import com.intellij.psi.tree.ILightStubFileElementType
+import com.mwnciau.rblade.psi.RBladeOuterElementType
+import com.mwnciau.rblade.psi.RBladeTypes
+import com.mwnciau.rblade.psi.impl.RBladeRubyFileImpl
+import com.mwnciau.rblade.ruby.RBladeRubyLanguage
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
 import java.util.concurrent.ConcurrentHashMap
 
@@ -20,22 +32,46 @@ class RBladeFileViewProvider(
   virtualFile: VirtualFile,
   eventSystemEnabled: Boolean
 ) : MultiplePsiFilesPerDocumentFileViewProvider(manager, virtualFile, eventSystemEnabled),
-  ConfigurableTemplateLanguageFileViewProvider {
+  TemplateLanguageFileViewProvider {
   companion object {
     val OUTER_RBLADE = RBladeOuterElementType("Outer RBlade")
-    val ELEMENT_TYPE_BY_LANGUAGE_ID = ConcurrentHashMap<String, IElementType>();
+    val ELEMENT_TYPE_BY_LANGUAGE_ID = ConcurrentHashMap<String, IElementType?>();
+    private val LOG = Logger.getInstance(RBladeFileViewProvider::class.java)
   }
+
+  private var templateDataLanguage: Language = computeTemplateDataLanguage()
 
   override fun getBaseLanguage(): Language {
     return RBladeLanguage.INSTANCE
   }
 
-  override fun getLanguages(): MutableSet<Language> {
-    return mutableSetOf(RBladeLanguage.INSTANCE, RubyLanguage.INSTANCE, HTMLLanguage.INSTANCE)
+  override fun getTemplateDataLanguage(): Language {
+    return templateDataLanguage
   }
 
-  override fun getTemplateDataLanguage(): Language {
-    return HTMLLanguage.INSTANCE
+  override fun getLanguages(): MutableSet<Language> {
+    return mutableSetOf(RBladeLanguage.INSTANCE, RubyLanguage.INSTANCE, templateDataLanguage)
+  }
+
+  fun contentElementType(language : Language) : IElementType? {
+    // TODO does this affect how templates are connected?
+    return ELEMENT_TYPE_BY_LANGUAGE_ID.computeIfAbsent(language.id) {
+      _: String ->
+        when (language) {
+          RubyLanguage.INSTANCE -> {
+            //elementType = EmbeddedRubyElementType()
+            RBladeElementTypes.RUBY_CODE_IN_RBLADE_ROOT
+          }
+
+          templateDataLanguage -> {
+            RBladeElementTypes.TEMPLATE_DATA
+          }
+
+          else -> {
+            null
+          }
+        }
+    }
   }
 
   override fun cloneInner(fileCopy: VirtualFile): MultiplePsiFilesPerDocumentFileViewProvider {
@@ -43,37 +79,83 @@ class RBladeFileViewProvider(
   }
 
   override fun createFile(lang: Language): PsiFile? {
-    val parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang) ?: return null
+    return when (lang) {
+      RubyLanguage.INSTANCE -> {
+        RBladeRubyFileImpl(this)
+      }
+      templateDataLanguage -> {
+        val parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang)
+        val file = parserDefinition.createFile(this) as PsiFileImpl
+        if (file.contentElementType !is ILightStubFileElementType<*>) {
+          file.contentElementType = RBladeElementTypes.TEMPLATE_DATA
+        }
 
-    if (lang.isKindOf(RBladeLanguage.INSTANCE)) {
-      return parserDefinition.createFile(this)
+        file
+      }
+      RBladeLanguage.INSTANCE -> {
+        val parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang)
+
+        parserDefinition.createFile(this)
+      }
+      else -> {
+        null
+      }
+    }
+  }
+
+  override fun getStubBindingRoot(): PsiFile {
+    return this.getPsi(RubyLanguage.INSTANCE) as PsiFile
+  }
+
+  private fun computeTemplateDataLanguage(): Language {
+    var name = virtualFile.name
+    if (name.endsWith(".rblade")) {
+      name = name.substring(0, name.length - 4)
     }
 
-    val psiFileImpl = parserDefinition.createFile(this) as PsiFileImpl
-    psiFileImpl.contentElementType = elementType(lang)
+    val dotIndex = name.lastIndexOf(".")
+    if (dotIndex < 0) {
+      return HTMLLanguage.INSTANCE
+    }
 
-    return psiFileImpl
-  }
-
-  fun elementType(language : Language) : IElementType {
-    return ELEMENT_TYPE_BY_LANGUAGE_ID.computeIfAbsent(
-      language.getID(),
-      {
-        languageID : String ->
-          val elementType : IElementType
-
-          if (language == RubyLanguage.INSTANCE) {
-              elementType = EmbeddedRubyElementType()
-          } else {
-              elementType = HtmlElementType();
-          }
-
-          elementType
+    val templateLanguage = this.getLanguageByExtension(name.substring(dotIndex + 1))
+    if (templateLanguage !is TemplateLanguage) {
+      if (LanguageParserDefinitions.INSTANCE.forLanguage(templateLanguage) != null) {
+        return templateLanguage
       }
-    )
+
+      LOG.warn("No parser definition found for [$templateLanguage], in file $name falling back to plain text");
+
+      return PlainTextLanguage.INSTANCE
+    }
+
+    return templateLanguage
   }
 
-  override fun supportsIncrementalReparse(rootLanguage: Language): Boolean {
-    return false
+  private fun getLanguageByExtension(ext: String): Language {
+    val fileType = FileTypeManager.getInstance().getFileTypeByExtension(ext)
+    if (fileType !is LanguageFileType) {
+      return HTMLLanguage.INSTANCE;
+    }
+
+    val language = fileType.language
+
+    return if (language is RubyLanguage) {
+      RBladeRubyLanguage.INSTANCE
+    } else if (ext.equals("plist", true)) {
+      XMLLanguage.INSTANCE
+    } else {
+      val substitutedLanguage = LanguageSubstitutors
+        .getInstance()
+        .substituteLanguage(language, this.virtualFile, this.manager.project)
+
+      if (substitutedLanguage != RBladeLanguage.INSTANCE) {
+        substitutedLanguage
+      } else if (language != RBladeLanguage.INSTANCE) {
+        language
+      } else {
+        HTMLLanguage.INSTANCE
+      }
+    }
   }
 }
