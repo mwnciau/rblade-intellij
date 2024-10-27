@@ -63,6 +63,7 @@
         <internalFileTemplate name="RBlade File"/>
     </extensions>
     <extensions defaultExtensionNs="org.jetbrains.plugins.ruby">
+        <templates.integration implementation="com.mwnciau.rblade.RubyRBladeIntegrationImpl" />
         <rails.viewFileTypesProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTypesProvider"/>
         <rails.viewFileTemplateProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTemplateProvider"/>
     </extensions>

@@ -7,7 +7,7 @@ import com.mwnciau.rblade.psi.RBladeTypes
 
 class RBladeRubyLexer(highlightingMode: Boolean, private val initialState: Int = 0) : MergingLexerAdapter(_RBladeRubyLexer(highlightingMode), TOKENS_TO_MERGE) {
   companion object {
-    private val TOKENS_TO_MERGE = TokenSet.create(RBladeTypes.RBLADE_INJECTION_IN_RUBY)
+    private val TOKENS_TO_MERGE = TokenSet.create(RBladeTypes.RBLADE_INJECTION_IN_RUBY, RBladeTypes.RUBY_EXPRESSION)
   }
 
   override fun start(buffer: CharSequence, startOffset: Int, endOffset: Int, initialState: Int) {

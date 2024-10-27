@@ -22,7 +22,6 @@ import com.intellij.psi.tree.ILightStubFileElementType
 import com.mwnciau.rblade.psi.impl.RBladeRubyFileImpl
 import com.mwnciau.rblade.ruby.RBladeRubyLanguage
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
-import java.util.concurrent.ConcurrentHashMap
 
 
 class RBladeFileViewProvider(
