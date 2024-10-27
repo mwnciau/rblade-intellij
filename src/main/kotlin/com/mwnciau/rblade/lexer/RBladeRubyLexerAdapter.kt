@@ -5,7 +5,7 @@ import com.mwnciau.rblade.psi.RBladeTypes
 import org.jetbrains.plugins.ruby.erb.lexer.AbstractErbRubyLexer
 import org.jetbrains.plugins.ruby.ruby.lang.lexer.RubyLexer
 
-class _RBladeRubyLexer(highlightingMode: Boolean)
+class RBladeRubyLexerAdapter(highlightingMode: Boolean)
   : AbstractErbRubyLexer(highlightingMode, RBladeMergingLexer(), RBladeTypes.RUBY_EXPRESSION, RBladeTypes.RBLADE_INJECTION_IN_RUBY)
 {
   override fun resetRubyLexer(rubyLexer: RubyLexer, buffer: CharSequence, start: Int, end: Int) {
