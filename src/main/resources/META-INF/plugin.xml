@@ -17,9 +17,12 @@
 
     <change-notes>
         <![CDATA[
-            <h2>1.0.2 changes</h2>
+            <h2>1.1.0 changes</h2>
             <ul>
-                <li>Remove the maximum build from the compatibility range</li>
+                <li>Improve implementation of the embedded Ruby virtual file</li>
+                <li>Change highlighter colours</li>
+                <li>Improve Ruby parsing of statement parameters</li>
+                <li>Reduce error rate of RBlade lexer</li>
             </ul>
         ]]>
     </change-notes>
@@ -33,7 +36,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <fileType
-            name="RBlade File"
+            name="RBlade"
             implementationClass="com.mwnciau.rblade.RBladeFileType"
             fieldName="INSTANCE"
             language="RBlade"
@@ -48,7 +51,7 @@
             language="RBlade"
             implementationClass="com.mwnciau.rblade.highlighter.RBladeSyntaxHighlighterFactory"/>
         <editorHighlighterProvider
-            filetype="RBlade File"
+            filetype="RBlade"
             implementationClass="com.mwnciau.rblade.highlighter.RBladeEditorHighlighterProvider"/>
         <completion.contributor
             language="RBlade"
