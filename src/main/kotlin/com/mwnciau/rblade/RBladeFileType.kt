@@ -10,7 +10,7 @@ class RBladeFileType private constructor() : AbstractRubyFileType(RBladeLanguage
     }
 
     override fun getName(): String {
-        return "RBlade File"
+        return "RBlade"
     }
 
     override fun getDescription(): String {

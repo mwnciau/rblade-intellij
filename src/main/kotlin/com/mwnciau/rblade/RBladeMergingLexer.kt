@@ -8,6 +8,6 @@ import java.io.Reader
 
 class RBladeMergingLexer : MergingLexerAdapter(FlexAdapter(RBladeLexer(null as Reader?)), TOKENS_TO_MERGE) {
   companion object {
-    val TOKENS_TO_MERGE = TokenSet.create(RBladeTypes.HTML_TEMPLATE)
+    val TOKENS_TO_MERGE = TokenSet.create(RBladeTypes.HTML_TEMPLATE, RBladeTypes.RUBY_EXPRESSION)
   }
 }

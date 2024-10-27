@@ -19,8 +19,6 @@ import com.intellij.psi.templateLanguages.TemplateLanguage
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.ILightStubFileElementType
-import com.mwnciau.rblade.psi.RBladeOuterElementType
-import com.mwnciau.rblade.psi.RBladeTypes
 import com.mwnciau.rblade.psi.impl.RBladeRubyFileImpl
 import com.mwnciau.rblade.ruby.RBladeRubyLanguage
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
@@ -34,12 +32,10 @@ class RBladeFileViewProvider(
 ) : MultiplePsiFilesPerDocumentFileViewProvider(manager, virtualFile, eventSystemEnabled),
   TemplateLanguageFileViewProvider {
   companion object {
-    val OUTER_RBLADE = RBladeOuterElementType("Outer RBlade")
-    val ELEMENT_TYPE_BY_LANGUAGE_ID = ConcurrentHashMap<String, IElementType?>();
     private val LOG = Logger.getInstance(RBladeFileViewProvider::class.java)
   }
 
-  private var templateDataLanguage: Language = computeTemplateDataLanguage()
+  private val templateDataLanguage: Language = computeTemplateDataLanguage()
 
   override fun getBaseLanguage(): Language {
     return RBladeLanguage.INSTANCE
@@ -53,24 +49,19 @@ class RBladeFileViewProvider(
     return mutableSetOf(RBladeLanguage.INSTANCE, RubyLanguage.INSTANCE, templateDataLanguage)
   }
 
-  fun contentElementType(language : Language) : IElementType? {
-    // TODO does this affect how templates are connected?
-    return ELEMENT_TYPE_BY_LANGUAGE_ID.computeIfAbsent(language.id) {
-      _: String ->
-        when (language) {
-          RubyLanguage.INSTANCE -> {
-            //elementType = EmbeddedRubyElementType()
-            RBladeElementTypes.RUBY_CODE_IN_RBLADE_ROOT
-          }
+  override fun getContentElementType(language: Language): IElementType? {
+    return when (language) {
+      RubyLanguage.INSTANCE -> {
+        RBladeElementTypes.RUBY_CODE_IN_RBLADE_ROOT
+      }
 
-          templateDataLanguage -> {
-            RBladeElementTypes.TEMPLATE_DATA
-          }
+      templateDataLanguage -> {
+        RBladeElementTypes.TEMPLATE_DATA
+      }
 
-          else -> {
-            null
-          }
-        }
+      else -> {
+        null
+      }
     }
   }
 
@@ -110,7 +101,7 @@ class RBladeFileViewProvider(
   private fun computeTemplateDataLanguage(): Language {
     var name = virtualFile.name
     if (name.endsWith(".rblade")) {
-      name = name.substring(0, name.length - 4)
+      name = name.substring(0, name.length - 7)
     }
 
     val dotIndex = name.lastIndexOf(".")
