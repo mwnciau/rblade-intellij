@@ -598,7 +598,7 @@ class RBladeLexer implements FlexLexer {
           // fall through
           case 20: break;
           case 2:
-            { 
+            { return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 21: break;
@@ -607,11 +607,12 @@ class RBladeLexer implements FlexLexer {
                                         stringDelimiterStack.addFirst(flipBracket(yycharat(yylength() - 1)));
                                         stringIsInterpolated = yycharat(0) == '"' || (yylength() == 3 && yytext().toString().substring(0, 2) == "%Q");
                                         yybegin(STATE_STRING_LITERAL);
+                                        return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 22: break;
           case 4:
-            { stateStack.addFirst(STATE_RUBY_BLOCK);
+            { stateStack.addFirst(STATE_RUBY_BLOCK); return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 23: break;
@@ -622,11 +623,11 @@ class RBladeLexer implements FlexLexer {
                                         ) {
                                             yypushback(yylength());
                                             yybegin(stateStack.removeFirst());
-                                            return RBladeTypes.RUBY_EXPRESSION;
                                         }
                                         if (yycharat(0) == ')') {
                                             yybegin(stateStack.removeFirst());
                                         }
+                                        return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 24: break;
@@ -646,6 +647,7 @@ class RBladeLexer implements FlexLexer {
                                             stringDelimiterStack.removeFirst();
                                             yybegin(stateStack.removeFirst());
                                         }
+                                        return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 27: break;
@@ -653,16 +655,17 @@ class RBladeLexer implements FlexLexer {
             { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
                                       stringDelimiterStack.addFirst(flipBracket(yycharat(yylength() - 1)));
                                       yybegin(STATE_STRING_LITERAL);
+                                      return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 28: break;
           case 10:
-            { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
+            { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION); return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 29: break;
           case 11:
-            { yybegin(stateStack.removeFirst());
+            { yybegin(stateStack.removeFirst()); return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 30: break;
@@ -692,6 +695,7 @@ class RBladeLexer implements FlexLexer {
                                           stateStack.addFirst(STATE_STRING_LITERAL);
                                           yybegin(STATE_STRING_LITERAL_INTERPOLATION);
                                         }
+                                        return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 34: break;

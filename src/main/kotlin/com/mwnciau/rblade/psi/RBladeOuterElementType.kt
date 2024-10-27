@@ -13,10 +13,6 @@ class RBladeOuterElementType @JvmOverloads constructor(debugName: String, privat
   }
 
   override fun createLeafNode(charSequence: CharSequence): ASTNode {
-    /**
-     * Todo: ERB creates a custom class here
-     * @see org.jetbrains.plugins.ruby.erb.psi.IErbOuterElementType
-     */
     return RBladeOuterLanguageElementImpl(this, charSequence);
   }
 }

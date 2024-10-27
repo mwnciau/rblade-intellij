@@ -59,7 +59,7 @@ public class RBladeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // RBLADE_STATEMENT (RUBY_EXPRESSION RBLADE_STATEMENT)?
+  // RBLADE_STATEMENT (RUBY_EXPRESSION+ RBLADE_STATEMENT)?
   public static boolean statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "statement")) return false;
     if (!nextTokenIs(b, RBLADE_STATEMENT)) return false;
@@ -71,19 +71,35 @@ public class RBladeParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (RUBY_EXPRESSION RBLADE_STATEMENT)?
+  // (RUBY_EXPRESSION+ RBLADE_STATEMENT)?
   private static boolean statement_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "statement_1")) return false;
     statement_1_0(b, l + 1);
     return true;
   }
 
-  // RUBY_EXPRESSION RBLADE_STATEMENT
+  // RUBY_EXPRESSION+ RBLADE_STATEMENT
   private static boolean statement_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "statement_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, RUBY_EXPRESSION, RBLADE_STATEMENT);
+    r = statement_1_0_0(b, l + 1);
+    r = r && consumeToken(b, RBLADE_STATEMENT);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // RUBY_EXPRESSION+
+  private static boolean statement_1_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "statement_1_0_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, RUBY_EXPRESSION);
+    while (r) {
+      int c = current_position_(b);
+      if (!consumeToken(b, RUBY_EXPRESSION)) break;
+      if (!empty_element_parsed_guard_(b, "statement_1_0_0", c)) break;
+    }
     exit_section_(b, m, null, r);
     return r;
   }
