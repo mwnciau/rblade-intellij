@@ -4,11 +4,11 @@
 // Copyright 2000-2022 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.mwnciau.rblade;
 
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.mwnciau.rblade.psi.RBladeTypes;
 import com.intellij.psi.TokenType;
 import java.util.ArrayDeque;
-
 
 class RBladeLexer implements FlexLexer {
 
@@ -41,7 +41,8 @@ class RBladeLexer implements FlexLexer {
   private static final int [] ZZ_CMAP_TOP = zzUnpackcmap_top();
 
   private static final String ZZ_CMAP_TOP_PACKED_0 =
-    "\1\0\37\u0100\1\u0200\267\u0100\10\u0300\u1020\u0100";
+    "\1\0\1\u0100\24\u0200\1\u0300\11\u0200\1\u0400\17\u0200\1\u0500"+
+    "\247\u0200\10\u0600\u1020\u0200";
 
   private static int [] zzUnpackcmap_top() {
     int [] result = new int[4352];
@@ -71,17 +72,19 @@ class RBladeLexer implements FlexLexer {
   private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
     "\11\0\1\1\4\2\22\0\1\1\1\3\1\4\1\5"+
     "\1\0\1\6\1\0\1\4\1\7\1\10\2\0\1\11"+
-    "\1\12\16\0\1\13\1\14\1\15\1\0\1\16\1\17"+
-    "\1\20\1\17\1\21\1\22\3\17\1\23\4\17\1\24"+
-    "\2\17\1\23\1\25\2\17\1\26\1\17\1\23\1\17"+
-    "\1\27\1\17\1\0\1\30\2\0\1\31\1\0\1\17"+
-    "\1\20\1\17\1\21\1\22\3\17\1\23\4\17\1\24"+
-    "\2\17\1\23\1\32\1\23\1\17\1\26\1\17\2\23"+
-    "\1\27\1\17\1\33\1\0\1\34\7\0\1\2\u01a2\0"+
-    "\2\2\326\0\u0100\2";
+    "\1\12\14\0\1\13\1\0\1\14\1\15\1\16\1\0"+
+    "\1\17\1\20\1\21\1\20\1\22\1\23\3\20\1\24"+
+    "\4\20\1\25\2\20\1\26\1\27\2\20\1\30\1\20"+
+    "\1\26\1\20\1\31\1\20\1\0\1\32\2\0\1\33"+
+    "\1\0\1\20\1\21\1\20\1\22\1\23\3\20\1\24"+
+    "\4\20\1\25\2\20\1\26\1\34\1\26\1\20\1\30"+
+    "\1\20\2\26\1\31\1\20\1\35\1\0\1\36\7\0"+
+    "\1\2\32\0\1\37\217\0\2\40\u024e\0\1\37\177\0"+
+    "\13\37\35\0\2\2\5\0\1\37\57\0\1\37\240\0"+
+    "\1\37\377\0\u0100\41";
 
   private static int [] zzUnpackcmap_blocks() {
-    int [] result = new int[1024];
+    int [] result = new int[1792];
     int offset = 0;
     offset = zzUnpackcmap_blocks(ZZ_CMAP_BLOCKS_PACKED_0, offset, result);
     return result;
@@ -105,15 +108,15 @@ class RBladeLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\5\0\4\1\2\2\1\3\1\2\1\4\1\5\1\6"+
-    "\2\2\3\7\1\10\2\7\3\11\1\2\1\12\1\2"+
-    "\1\13\1\14\1\15\2\16\1\0\1\17\1\2\1\3"+
-    "\3\0\1\20\1\2\1\12\1\0\1\15\1\0\1\21"+
-    "\1\16\1\22\4\0\1\15\1\16\3\0\1\23\1\24"+
-    "\13\0\1\23";
+    "\5\0\4\1\3\2\1\3\1\2\1\4\1\5\1\6"+
+    "\1\7\2\2\3\10\1\11\2\10\3\12\1\2\1\13"+
+    "\1\2\1\14\1\15\1\16\2\17\1\0\1\20\2\0"+
+    "\1\2\1\3\3\0\1\21\1\2\1\13\1\0\1\16"+
+    "\1\0\1\22\1\17\1\23\5\0\1\16\1\17\1\0"+
+    "\1\24\2\0\1\25\1\26\13\0\1\25";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[74];
+    int [] result = new int[80];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -138,19 +141,19 @@ class RBladeLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\35\0\72\0\127\0\164\0\221\0\256\0\313"+
-    "\0\350\0\u0105\0\u0122\0\u013f\0\u015c\0\u013f\0\u013f\0\u013f"+
-    "\0\u0179\0\u0196\0\u013f\0\u01b3\0\u01d0\0\u013f\0\u01ed\0\u020a"+
-    "\0\u013f\0\u0227\0\u0244\0\u0261\0\u013f\0\u027e\0\u013f\0\u013f"+
-    "\0\u029b\0\u02b8\0\u02d5\0\u02f2\0\u030f\0\u032c\0\u0349\0\u0366"+
-    "\0\u020a\0\u0383\0\u013f\0\u013f\0\u03a0\0\u03bd\0\u03da\0\u03f7"+
-    "\0\u013f\0\u0414\0\u013f\0\u0431\0\u044e\0\u046b\0\u0488\0\u013f"+
-    "\0\u04a5\0\u04c2\0\u04df\0\u04fc\0\u03bd\0\u02b8\0\u0519\0\u0536"+
-    "\0\u0553\0\u0570\0\u058d\0\u05aa\0\u05c7\0\u05e4\0\u0601\0\u061e"+
-    "\0\u063b\0\u04c2";
+    "\0\0\0\42\0\104\0\146\0\210\0\252\0\314\0\356"+
+    "\0\u0110\0\u0132\0\u0154\0\u0176\0\u0198\0\u01ba\0\u0198\0\u0198"+
+    "\0\u0198\0\u0198\0\u01dc\0\u01fe\0\u0198\0\u0220\0\u0242\0\u0198"+
+    "\0\u0264\0\u0286\0\u0198\0\u02a8\0\u02ca\0\u02ec\0\u0198\0\u030e"+
+    "\0\u0198\0\u0198\0\u0330\0\u0352\0\u0374\0\u0396\0\u03b8\0\u0154"+
+    "\0\u03da\0\u03fc\0\u041e\0\u0440\0\u0286\0\u0462\0\u0198\0\u0198"+
+    "\0\u0484\0\u04a6\0\u04c8\0\u04ea\0\u0198\0\u050c\0\u0198\0\u052e"+
+    "\0\u0550\0\u0572\0\u0594\0\u05b6\0\u0198\0\u05d8\0\u05fa\0\u0550"+
+    "\0\u061c\0\u063e\0\u04a6\0\u0352\0\u0660\0\u0682\0\u06a4\0\u06c6"+
+    "\0\u06e8\0\u070a\0\u072c\0\u074e\0\u0770\0\u0792\0\u07b4\0\u05fa";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[74];
+    int [] result = new int[80];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -173,41 +176,47 @@ class RBladeLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\13\6\1\7\2\6\1\10\14\6\1\11\1\6\3\12"+
-    "\1\13\1\14\1\12\1\15\1\16\1\17\1\20\4\12"+
-    "\1\21\15\12\1\22\3\23\1\24\2\23\1\25\1\23"+
-    "\1\26\5\23\1\27\15\23\1\30\5\31\1\32\22\31"+
-    "\1\33\4\31\4\34\1\35\1\34\1\36\24\34\1\37"+
-    "\1\40\13\6\1\0\2\6\1\0\14\6\1\0\1\6"+
-    "\6\0\1\41\45\0\6\42\1\43\2\42\1\0\1\42"+
-    "\1\43\5\0\1\44\27\0\1\45\1\0\4\12\1\0"+
-    "\1\12\4\0\4\12\1\0\15\12\1\0\3\12\1\46"+
-    "\1\0\1\12\4\0\4\12\1\0\15\12\36\0\2\14"+
-    "\1\0\12\14\1\17\5\14\1\47\6\14\1\47\2\14"+
-    "\22\0\1\50\46\0\1\17\3\0\1\51\46\0\1\26"+
-    "\41\0\1\52\46\0\1\26\33\0\1\53\1\0\35\54"+
-    "\4\34\1\0\1\34\1\0\24\34\2\0\2\35\1\0"+
-    "\20\35\1\55\6\35\1\55\2\35\5\0\1\56\6\0"+
-    "\1\57\21\0\1\60\5\0\1\61\7\0\11\42\1\0"+
-    "\2\42\3\0\1\60\5\0\1\61\7\0\7\42\1\62"+
-    "\1\42\1\0\2\42\5\0\1\63\43\0\1\64\22\0"+
-    "\4\12\1\0\1\12\4\0\4\12\1\0\15\12\1\17"+
-    "\2\14\1\0\32\14\24\0\1\65\34\0\1\66\10\0"+
-    "\2\35\1\0\32\35\6\56\1\67\26\56\14\0\1\70"+
-    "\21\0\1\60\5\0\1\61\26\0\1\60\5\0\1\61"+
-    "\7\0\1\42\1\71\7\42\1\0\2\42\14\0\1\72"+
-    "\43\0\1\73\34\0\1\74\13\0\6\56\1\67\6\56"+
-    "\1\75\17\56\1\0\1\60\5\0\1\61\7\0\10\42"+
-    "\1\76\1\0\2\42\2\0\12\72\1\77\22\72\25\0"+
-    "\1\100\3\0\1\101\1\100\27\0\1\102\3\0\1\103"+
-    "\1\102\2\0\12\72\1\104\22\72\26\0\1\105\33\0"+
-    "\1\100\4\0\1\100\30\0\1\106\33\0\1\102\4\0"+
-    "\1\102\2\0\12\72\1\104\21\72\1\107\20\0\1\110"+
-    "\34\0\1\111\14\0\12\72\1\77\21\72\1\112\27\0"+
-    "\1\17\34\0\1\26\5\0";
+    "\14\6\1\7\2\6\1\10\15\6\1\11\4\6\1\12"+
+    "\2\13\1\14\1\15\1\12\1\16\1\17\1\20\1\21"+
+    "\1\12\1\22\3\12\1\23\16\12\1\24\1\13\2\12"+
+    "\3\25\1\26\2\25\1\27\1\25\1\30\6\25\1\31"+
+    "\16\25\1\32\3\25\5\33\1\34\24\33\1\35\7\33"+
+    "\4\36\1\37\1\36\1\40\26\36\1\41\1\42\3\36"+
+    "\14\6\1\0\2\6\1\0\15\6\1\0\4\6\6\0"+
+    "\1\43\53\0\7\44\1\45\2\44\1\0\1\44\1\45"+
+    "\10\0\1\46\31\0\1\47\4\0\1\12\2\0\1\12"+
+    "\1\0\1\12\4\0\1\12\1\0\3\12\1\0\16\12"+
+    "\2\0\2\12\1\0\2\50\21\0\1\51\12\0\1\50"+
+    "\1\51\1\0\1\12\2\0\1\52\1\0\1\12\4\0"+
+    "\1\12\1\0\3\12\1\0\16\12\2\0\2\12\42\0"+
+    "\2\15\1\0\13\15\1\20\5\15\1\53\1\15\1\53"+
+    "\5\15\1\53\4\15\24\0\1\54\54\0\1\20\6\0"+
+    "\1\55\54\0\1\30\46\0\1\56\54\0\1\30\40\0"+
+    "\1\57\4\0\42\60\4\36\1\0\1\36\1\0\26\36"+
+    "\2\0\3\36\2\37\1\0\21\37\1\61\1\37\1\61"+
+    "\5\37\1\61\4\37\6\0\1\62\7\0\1\63\25\0"+
+    "\1\64\5\0\1\65\10\0\12\44\1\0\2\44\6\0"+
+    "\1\64\5\0\1\65\10\0\10\44\1\66\1\44\1\0"+
+    "\2\44\10\0\1\67\50\0\1\70\54\0\1\71\14\0"+
+    "\1\12\2\0\1\12\1\0\1\12\4\0\1\12\1\0"+
+    "\3\12\1\0\16\12\1\20\1\0\2\12\2\15\1\0"+
+    "\36\15\26\0\1\72\41\0\1\73\14\0\2\37\1\0"+
+    "\36\37\1\0\6\62\1\74\33\62\15\0\1\75\25\0"+
+    "\1\64\5\0\1\65\33\0\1\64\5\0\1\65\10\0"+
+    "\1\44\1\76\10\44\1\0\2\44\17\0\1\77\30\0"+
+    "\2\100\34\0\1\100\24\0\1\101\41\0\1\102\17\0"+
+    "\6\62\1\74\7\62\1\103\23\62\1\0\1\64\5\0"+
+    "\1\65\10\0\11\44\1\104\1\0\2\44\5\0\12\77"+
+    "\1\105\27\77\27\0\1\106\3\0\1\107\1\106\34\0"+
+    "\1\110\3\0\1\111\1\110\5\0\12\77\1\112\27\77"+
+    "\30\0\1\113\40\0\1\106\4\0\1\106\35\0\1\114"+
+    "\40\0\1\110\4\0\1\110\5\0\12\77\1\112\23\77"+
+    "\1\115\3\77\21\0\1\116\41\0\1\117\20\0\12\77"+
+    "\1\105\23\77\1\120\3\77\31\0\1\20\41\0\1\30"+
+    "\10\0";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[1624];
+    int [] result = new int[2006];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -245,14 +254,14 @@ class RBladeLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\5\0\6\1\1\11\1\1\3\11\2\1\1\11\2\1"+
+    "\5\0\7\1\1\11\1\1\4\11\2\1\1\11\2\1"+
     "\1\11\2\1\1\11\3\1\1\11\1\1\2\11\3\1"+
-    "\1\0\3\1\3\0\2\11\1\1\1\0\1\1\1\0"+
-    "\1\11\1\1\1\11\4\0\1\11\1\1\3\0\2\1"+
-    "\13\0\1\1";
+    "\1\0\1\1\2\0\2\1\3\0\2\11\1\1\1\0"+
+    "\1\1\1\0\1\11\1\1\1\11\5\0\1\11\1\1"+
+    "\1\0\1\1\2\0\2\1\13\0\1\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[74];
+    int [] result = new int[80];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -324,6 +333,7 @@ class RBladeLexer implements FlexLexer {
     private ArrayDeque<Character> stringDelimiterStack = new ArrayDeque<Character>();
     private boolean stringIsInterpolated;
     private String rubyBlockEndDelimiter;
+    private String currentStatement = "";
 
     private char flipBracket(char bracket){
         switch (bracket) {
@@ -595,26 +605,26 @@ class RBladeLexer implements FlexLexer {
             { return RBladeTypes.HTML_TEMPLATE;
             }
           // fall through
-          case 21: break;
+          case 23: break;
           case 2:
             { return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 22: break;
+          case 24: break;
           case 3:
             { stateStack.addFirst(STATE_RUBY_BLOCK);
                                             stringDelimiterStack.addFirst(flipBracket(yycharat(yylength() - 1)));
-                                            stringIsInterpolated = yycharat(0) == '"' || (yylength() == 3 && yytext().toString().substring(0, 2) == "%Q");
+                                            stringIsInterpolated = yycharat(0) == '"' || (yylength() == 3 && yytext().toString().substring(0, 2).equals("%Q"));
                                             yybegin(STATE_STRING_LITERAL);
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 23: break;
+          case 25: break;
           case 4:
             { stateStack.addFirst(STATE_RUBY_BLOCK); return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 24: break;
+          case 26: break;
           case 5:
             { if (
                                               stateStack.getFirst() == STATE_RUBY_BLOCK_END
@@ -631,24 +641,34 @@ class RBladeLexer implements FlexLexer {
                                             }
             }
           // fall through
-          case 25: break;
-          case 6:
-            { return stateStack.getFirst() == STATE_RUBY_BLOCK_END ? RBladeTypes.RBLADE_STATEMENT : RBladeTypes.RUBY_EXPRESSION;
-            }
-          // fall through
-          case 26: break;
-          case 7:
-            { return TokenType.BAD_CHARACTER;
-            }
-          // fall through
           case 27: break;
-          case 8:
-            { yybegin(YYINITIAL);
-                                        return RBladeTypes.RBLADE_STATEMENT;
+          case 6:
+            { return stateStack.getFirst() == STATE_RUBY_BLOCK_END ? RBladeTypes.RBLADE_STATEMENT_COMMA : RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
           case 28: break;
+          case 7:
+            { if (currentStatement.equals("props") && stateStack.getFirst() == STATE_RUBY_BLOCK_END) {
+                                                return RBladeTypes.RBLADE_STATEMENT_PROPS_COLON;
+                                            }
+
+                                            return RBladeTypes.RUBY_EXPRESSION;
+            }
+          // fall through
+          case 29: break;
+          case 8:
+            { return TokenType.BAD_CHARACTER;
+            }
+          // fall through
+          case 30: break;
           case 9:
+            { yybegin(YYINITIAL);
+                                          currentStatement = "";
+                                          return RBladeTypes.RBLADE_STATEMENT;
+            }
+          // fall through
+          case 31: break;
+          case 10:
             { if (yycharat(0) == stringDelimiterStack.getFirst()) {
                                                 stringDelimiterStack.removeFirst();
                                                 yybegin(stateStack.removeFirst());
@@ -656,47 +676,47 @@ class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 29: break;
-          case 10:
+          case 32: break;
+          case 11:
             { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
                                           stringDelimiterStack.addFirst(flipBracket(yycharat(yylength() - 1)));
                                           yybegin(STATE_STRING_LITERAL);
                                           return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 30: break;
-          case 11:
+          case 33: break;
+          case 12:
             { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION); return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 31: break;
-          case 12:
+          case 34: break;
+          case 13:
             { yybegin(stateStack.removeFirst()); return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 32: break;
-          case 13:
+          case 35: break;
+          case 14:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "%>";
                                             yybegin(STATE_RUBY_BLOCK);
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 33: break;
-          case 14:
+          case 36: break;
+          case 15:
             { return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 34: break;
-          case 15:
+          case 37: break;
+          case 16:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "}}";
                                             yybegin(STATE_RUBY_BLOCK);
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 35: break;
-          case 16:
+          case 38: break;
+          case 17:
             { if (stringIsInterpolated) {
                                               stateStack.addFirst(STATE_STRING_LITERAL);
                                               yybegin(STATE_STRING_LITERAL_INTERPOLATION);
@@ -704,36 +724,47 @@ class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 36: break;
-          case 17:
+          case 39: break;
+          case 18:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = ")";
                                             yybegin(STATE_RUBY_BLOCK);
+                                            currentStatement = yytext().toString().substring(1, yylength()-1).replace("_", "").toLowerCase();
+
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 37: break;
-          case 18:
+          case 40: break;
+          case 19:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "!!}";
                                             yybegin(STATE_RUBY_BLOCK);
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 38: break;
-          case 19:
+          case 41: break;
+          case 20:
+            { if (currentStatement.startsWith("each") && stateStack.getFirst() == STATE_RUBY_BLOCK_END) {
+                                                return RBladeTypes.RBLADE_STATEMENT_EACH_IN;
+                                            }
+
+                                            return RBladeTypes.RUBY_EXPRESSION;
+            }
+          // fall through
+          case 42: break;
+          case 21:
             { return RBladeTypes.COMMENT;
             }
           // fall through
-          case 39: break;
-          case 20:
+          case 43: break;
+          case 22:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "@endruby";
                                             yybegin(STATE_RUBY_BLOCK);
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 40: break;
+          case 44: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

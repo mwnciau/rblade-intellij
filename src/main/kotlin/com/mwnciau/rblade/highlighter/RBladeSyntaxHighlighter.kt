@@ -20,10 +20,16 @@ class RBladeSyntaxHighlighter : SyntaxHighlighterBase(), SyntaxHighlighter {
             createTextAttributesKey("RBLADE_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER)
         private val STATEMENT: TextAttributesKey =
             createTextAttributesKey("RBLADE_STATEMENT", DefaultLanguageHighlighterColors.CONSTANT)
+        private val SEPARATOR: TextAttributesKey =
+            createTextAttributesKey("RBLADE_SEPARATOR", DefaultLanguageHighlighterColors.COMMA)
+        private val KEYWORD: TextAttributesKey =
+            createTextAttributesKey("RBLADE_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
 
         private val BAD_CHAR_KEYS = arrayOf(BAD_CHARACTER)
         private val COMMENT_KEYS = arrayOf(COMMENT)
         private val STATEMENT_KEYS = arrayOf(STATEMENT)
+        private val SEPARATOR_KEYS = arrayOf(SEPARATOR)
+        private val KEYWORD_KEYS = arrayOf(KEYWORD)
         private val EMPTY_KEYS = emptyArray<TextAttributesKey>()
     }
 
@@ -36,6 +42,9 @@ class RBladeSyntaxHighlighter : SyntaxHighlighterBase(), SyntaxHighlighter {
             TokenType.BAD_CHARACTER -> BAD_CHAR_KEYS
             RBladeTypes.COMMENT -> COMMENT_KEYS
             RBladeTypes.RBLADE_STATEMENT -> STATEMENT_KEYS
+            RBladeTypes.RBLADE_STATEMENT_COMMA -> SEPARATOR_KEYS
+            RBladeTypes.RBLADE_STATEMENT_EACH_IN -> KEYWORD_KEYS
+            RBladeTypes.RBLADE_STATEMENT_PROPS_COLON -> SEPARATOR_KEYS
             else -> EMPTY_KEYS
         }
     }

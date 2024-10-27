@@ -11,6 +11,10 @@ public class RBladeVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitStatementParameters(@NotNull RBladeStatementParameters o) {
+    visitPsiElement(o);
+  }
+
   public void visitPsiElement(@NotNull PsiElement o) {
     visitElement(o);
   }

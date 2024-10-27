@@ -9,11 +9,11 @@ interface RBladeTypesFactory {
     @JvmStatic
     fun createElement(elementName: String): RBladeElementType
     {
-      if (elementName == "STATEMENT") {
-        return RBladeElementType("STATEMENT")
+      return when (elementName) {
+        "STATEMENT" -> RBladeElementType("STATEMENT")
+        "STATEMENT_PARAMETERS" -> RBladeElementType("STATEMENT_PARAMETERS")
+        else -> throw AssertionError ("Unknown element type: $elementName")
       }
-
-      throw AssertionError ("Unknown element type: $elementName");
     }
 
     @JvmStatic
@@ -22,6 +22,9 @@ interface RBladeTypesFactory {
         "COMMENT" -> RBladeTokenType("COMMENT")
         "HTML_TEMPLATE" -> RBladeOuterElementType("HTML_TEMPLATE")
         "RBLADE_STATEMENT" -> RBladeTokenType("RBLADE_STATEMENT")
+        "RBLADE_STATEMENT_COMMA" -> RBladeTokenType("RBLADE_STATEMENT_COMMA")
+        "RBLADE_STATEMENT_EACH_IN" -> RBladeTokenType("RBLADE_STATEMENT_EACH_IN")
+        "RBLADE_STATEMENT_PROPS_COLON" -> RBladeTokenType("RBLADE_STATEMENT_PROPS_COLON")
         "RUBY_EXPRESSION" -> RBladeOuterElementType("RUBY_EXPRESSION")
         "RBLADE_INJECTION_IN_HTML" -> object : RBladeOuterElementType("RBLADE_INJECTION_IN_HTML") {
           override fun createLeafNode(charSequence: CharSequence): ASTNode {
