@@ -2,7 +2,6 @@ package com.mwnciau.rblade.lexer
 
 import com.intellij.lexer.MergingLexerAdapter
 import com.intellij.psi.tree.TokenSet
-import com.mwnciau.rblade.psi.RBladeTokenType
 import com.mwnciau.rblade.psi.RBladeTypes
 
 class RBladeRubyLexer(highlightingMode: Boolean, private val initialState: Int = 0) : MergingLexerAdapter(_RBladeRubyLexer(highlightingMode), TOKENS_TO_MERGE) {

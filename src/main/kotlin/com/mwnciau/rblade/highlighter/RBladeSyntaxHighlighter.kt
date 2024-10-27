@@ -4,14 +4,13 @@ import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey
+import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
+import com.mwnciau.rblade.RBladeMergingLexer
 import com.mwnciau.rblade.psi.RBladeTypes
-
-import com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey
-import com.intellij.openapi.fileTypes.SyntaxHighlighter
-import com.mwnciau.rblade.RBladeLexerAdapter
 
 class RBladeSyntaxHighlighter : SyntaxHighlighterBase(), SyntaxHighlighter {
     companion object {
@@ -20,7 +19,7 @@ class RBladeSyntaxHighlighter : SyntaxHighlighterBase(), SyntaxHighlighter {
         private val BAD_CHARACTER: TextAttributesKey =
             createTextAttributesKey("RBLADE_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER)
         private val STATEMENT: TextAttributesKey =
-            createTextAttributesKey("RBLADE_STATEMENT", DefaultLanguageHighlighterColors.KEYWORD)
+            createTextAttributesKey("RBLADE_STATEMENT", DefaultLanguageHighlighterColors.CONSTANT)
 
         private val BAD_CHAR_KEYS = arrayOf(BAD_CHARACTER)
         private val COMMENT_KEYS = arrayOf(COMMENT)
@@ -29,7 +28,7 @@ class RBladeSyntaxHighlighter : SyntaxHighlighterBase(), SyntaxHighlighter {
     }
 
     override fun getHighlightingLexer(): Lexer {
-        return RBladeLexerAdapter()
+        return RBladeMergingLexer()
     }
 
     override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> {

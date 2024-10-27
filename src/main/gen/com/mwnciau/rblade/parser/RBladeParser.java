@@ -59,7 +59,7 @@ public class RBladeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // RBLADE_STATEMENT (RUBY_EXPRESSION+ RBLADE_STATEMENT)?
+  // RBLADE_STATEMENT (RUBY_EXPRESSION+ RBLADE_STATEMENT)*
   public static boolean statement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "statement")) return false;
     if (!nextTokenIs(b, RBLADE_STATEMENT)) return false;
@@ -71,10 +71,14 @@ public class RBladeParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (RUBY_EXPRESSION+ RBLADE_STATEMENT)?
+  // (RUBY_EXPRESSION+ RBLADE_STATEMENT)*
   private static boolean statement_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "statement_1")) return false;
-    statement_1_0(b, l + 1);
+    while (true) {
+      int c = current_position_(b);
+      if (!statement_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "statement_1", c)) break;
+    }
     return true;
   }
 
