@@ -41,6 +41,9 @@
         <lang.parserDefinition
             language="RBlade"
             implementationClass="com.mwnciau.rblade.RBladeParserDefinition"/>
+        <lang.parserDefinition
+            language="RBladeRuby"
+            implementationClass="com.mwnciau.rblade.RBladeRubyParserDefinition"/>
         <lang.syntaxHighlighterFactory
             language="RBlade"
             implementationClass="com.mwnciau.rblade.highlighter.RBladeSyntaxHighlighterFactory"/>
