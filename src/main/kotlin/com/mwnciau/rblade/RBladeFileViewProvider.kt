@@ -1,6 +1,5 @@
 package com.mwnciau.rblade
 
-import RBladeElementTypes
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageParserDefinitions
 import com.intellij.lang.html.HTMLLanguage
@@ -19,6 +18,7 @@ import com.intellij.psi.templateLanguages.TemplateLanguage
 import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.ILightStubFileElementType
+import com.mwnciau.rblade.psi.RBladeElementTypes
 import com.mwnciau.rblade.psi.impl.RBladeRubyFileImpl
 import com.mwnciau.rblade.ruby.RBladeRubyLanguage
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage

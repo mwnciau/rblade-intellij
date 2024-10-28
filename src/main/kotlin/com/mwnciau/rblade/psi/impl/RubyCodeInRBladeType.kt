@@ -16,29 +16,8 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.impl.RubyInTemplateElementType
 import org.jetbrains.plugins.ruby.ruby.sdk.LanguageLevel
 
 class RubyCodeInRBladeType(debugName: String) : RubyInTemplateElementType(debugName) {
-  companion object {
-    val IN_SCRIPLET_STATE_PREFIXES = arrayOf(
-      "<%", "<%==", "<%=", "<%#", "{{", "@ruby"
-    )
-  }
-
   override fun createLexer(lazyParsableElement: ASTNode?): Lexer {
-    var state: Int = 0
-    if (lazyParsableElement != null) {
-      val textBefore = findOuterElementTextBefore(lazyParsableElement)
-      if (textBefore != null) {
-        for (prefix in IN_SCRIPLET_STATE_PREFIXES) {
-          if (textBefore.endsWith(prefix)) {
-            // ??
-            //     public static final int IN_ERB_SCRIPTLET_STATE = 4;
-            //     public static final int STATE_RUBY_BLOCK = 2;
-            state = 2
-          }
-        }
-      }
-    }
-
-    return RBladeRubyLexer(false, state);
+    return RBladeRubyLexer(false, 0);
   }
 
   private fun findOuterElementTextBefore(element: ASTNode): String? {

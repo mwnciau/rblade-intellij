@@ -1,9 +1,9 @@
+package com.mwnciau.rblade.psi
+
 import com.intellij.psi.stubs.PsiFileStub
 import com.intellij.psi.templateLanguages.TemplateDataElementType
 import com.intellij.psi.tree.IStubFileElementType
 import com.mwnciau.rblade.RBladeLanguage
-import com.mwnciau.rblade.psi.RBladeFile
-import com.mwnciau.rblade.psi.RBladeTypes
 import com.mwnciau.rblade.psi.impl.RubyCodeInRBladeType
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
 

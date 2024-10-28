@@ -1,6 +1,6 @@
 package com.mwnciau.rblade.psi.impl
 
-import RBladeElementTypes
+import com.mwnciau.rblade.psi.RBladeElementTypes
 import com.intellij.psi.FileViewProvider
 import com.mwnciau.rblade.RBladeFileViewProvider
 import com.mwnciau.rblade.psi.RBladeRubyFile

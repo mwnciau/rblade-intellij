@@ -1,15 +1,13 @@
 package com.mwnciau.rblade.psi.impl
 
-import RBladeElementTypes
+import com.mwnciau.rblade.psi.RBladeElementTypes
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.impl.source.PsiFileImpl
 import com.mwnciau.rblade.RBladeFileType
-import com.mwnciau.rblade.RBladeFileViewProvider
 import com.mwnciau.rblade.psi.RBladeFile
-import com.mwnciau.rblade.psi.RBladeRubyFile
 import org.jetbrains.plugins.ruby.ruby.codeInsight.resolve.scope.RControlFlow
 import org.jetbrains.plugins.ruby.ruby.codeInsight.resolve.scope.Scope
 import org.jetbrains.plugins.ruby.ruby.codeInsight.symbols.Type
@@ -21,13 +19,11 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.RPsiStructureElement
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.blocks.RCompoundStatement
 import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RContainer
 import org.jetbrains.plugins.ruby.ruby.lang.psi.holders.RequireInfo
-import org.jetbrains.plugins.ruby.ruby.lang.psi.impl.RPsiFileBase
 import org.jetbrains.plugins.ruby.ruby.lang.psi.variables.RConstant
 import org.jetbrains.plugins.ruby.ruby.lang.psi.variables.RGlobalVariable
 import org.jetbrains.plugins.ruby.ruby.lang.psi.variables.fields.RField
 import org.jetbrains.plugins.ruby.ruby.lang.psi.visitors.RubyElementVisitor
 import org.jetbrains.plugins.ruby.ruby.sdk.LanguageLevel
-import org.jetbrains.plugins.ruby.utils.VirtualFileUtil
 
 class RBladeFileImpl(viewProvider: FileViewProvider) :
   PsiFileImpl(RBladeElementTypes.RBLADE_FILE, RBladeElementTypes.RBLADE_FILE, viewProvider),
