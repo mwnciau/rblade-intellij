@@ -5,6 +5,6 @@ import com.mwnciau.rblade.RBladeLanguage
 
 class RBladeTokenType(debugName: String): IElementType(debugName, RBladeLanguage.INSTANCE) {
     override fun toString(): String {
-        return "RBladeTokenType.${super.toString()}"
+        return super.toString()
     }
 }

@@ -1,3 +1,4 @@
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -26,7 +27,12 @@ dependencies {
     pluginVerifier()
     zipSigner()
     instrumentationTools()
+
+    testFramework(TestFrameworkType.Platform)
+    testFramework(TestFrameworkType.Plugin.Ruby)
   }
+
+  testImplementation(kotlin("test"))
 }
 
 // Include the generated files in the source set
@@ -39,32 +45,32 @@ sourceSets {
 }
 
 tasks {
-    // Set the JVM compatibility versions
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        compilerOptions {
-          jvmTarget.set(JvmTarget.JVM_17)
-        }
-    }
+  // Set the JVM compatibility versions
+  withType<JavaCompile> {
+      sourceCompatibility = "17"
+      targetCompatibility = "17"
+  }
+  withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+      compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+      }
+  }
 
-    patchPluginXml {
-        sinceBuild.set("233")
-        untilBuild.set(provider { null })
-    }
+  patchPluginXml {
+      sinceBuild.set("233")
+      untilBuild.set(provider { null })
+  }
 
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
+  signPlugin {
+      certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+      privateKey.set(System.getenv("PRIVATE_KEY"))
+      password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+  }
 
-    publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
-    }
+  publishPlugin {
+      token.set(System.getenv("PUBLISH_TOKEN"))
+  }
 
-    setupDependencies {
-    }
+  setupDependencies {
+  }
 }
