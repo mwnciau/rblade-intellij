@@ -62,6 +62,7 @@ END_BLOCK=[}\])]
 %state STATE_RUBY_BLOCK_END
 %state STATE_STRING_LITERAL
 %state STATE_STRING_LITERAL_INTERPOLATION
+%state STATE_REGEX_LITERAL
 
 %%
 
@@ -159,14 +160,21 @@ END_BLOCK=[}\])]
 
                                             return RBladeTypes.RUBY_EXPRESSION;
                                         }
+    \/[^/]                              {
+                                            stateStack.addFirst(STATE_RUBY_BLOCK);
+                                            yypushback(1);
+                                            yybegin(STATE_REGEX_LITERAL);
+
+                                            return RBladeTypes.RUBY_EXPRESSION;
+                                        }
     \"|\'|%[qQwWiIrsx]?.                {
                                             stateStack.addFirst(STATE_RUBY_BLOCK);
                                             blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
-                                            stringIsInterpolated = yycharat(0) == '"' || (yylength() == 3 && yytext().toString().substring(0, 2).equals("%Q"));
+                                            stringIsInterpolated = yycharat(0) == '"' || yylength() == 2 || (yylength() == 3 && yytext().toString().substring(0, 2).equals("%Q"));
                                             yybegin(STATE_STRING_LITERAL);
                                             return RBladeTypes.RUBY_EXPRESSION;
                                         }
-    [^\"\'%\[\](){}|@,\s\:]+            { return RBladeTypes.RUBY_EXPRESSION; }
+    [^\"\'%\[\](){}|@,\s\:/]+           { return RBladeTypes.RUBY_EXPRESSION; }
     [^]                                 { return RBladeTypes.RUBY_EXPRESSION; }
 }
 <STATE_RUBY_BLOCK_END> {
@@ -192,6 +200,7 @@ END_BLOCK=[}\])]
                                                 blockStack.removeFirst();
                                                 yybegin(stateStack.removeFirst());
                                             }
+
                                             return RBladeTypes.RUBY_EXPRESSION;
                                         }
 }
@@ -203,9 +212,27 @@ END_BLOCK=[}\])]
                                           stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
                                           blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
                                           yybegin(STATE_STRING_LITERAL);
+
                                           return RBladeTypes.RUBY_EXPRESSION;
                                         }
-    [^\}\{\"\'%]+                       { return RBladeTypes.RUBY_EXPRESSION; }
+    \/[^/]                              {
+                                            yypushback(1);
+                                            stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
+                                            yybegin(STATE_REGEX_LITERAL);
+
+                                            return RBladeTypes.RUBY_EXPRESSION;
+                                        }
+    [^\}\{\"\'%/]+                      { return RBladeTypes.RUBY_EXPRESSION; }
+    [^]                                 { return RBladeTypes.RUBY_EXPRESSION; }
+}
+
+<STATE_REGEX_LITERAL> {
+    \\[^]                               { return RBladeTypes.RUBY_EXPRESSION; }
+    \/                                  {
+                                            yybegin(stateStack.removeFirst());
+
+                                            return RBladeTypes.RUBY_EXPRESSION;
+                                        }
     [^]                                 { return RBladeTypes.RUBY_EXPRESSION; }
 }
 

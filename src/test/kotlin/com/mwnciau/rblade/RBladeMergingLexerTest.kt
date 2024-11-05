@@ -4,10 +4,6 @@ import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
 class RBladeMergingLexerTest {
-  private fun lexer(): RBladeMergingLexer {
-    return RBladeMergingLexer()
-  }
-
   private fun lex(string: String): MutableList<String> {
     val lexer = RBladeMergingLexer()
     lexer.start(string)
@@ -58,10 +54,59 @@ class RBladeMergingLexerTest {
   }
 
   @Test
-  fun testStatementWithRegex() {
+  fun testRegex() {
     assertEquals(
       listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
       lex("@if(string.match /\"/)"),
+    )
+
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("{{ \"#{ /}\"/ }} }\" }}"),
+    )
+  }
+
+  @Test
+  fun testRubyStrings() {
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("{{ \"}}\" }}"),
+    )
+
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("{{ \"#{\" }} \"}\" }}"),
+    )
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("{{ %Q[#{] }} ] }}"),
+    )
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("{{ %[#{] }} ] }}"),
+    )
+
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("{{ %[}}] }}"),
+    )
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("{{ %|}}| }}"),
+    )
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("{{ %b}}b }}"),
+    )
+
+    // These aren't interpolated so the closing character will be registered
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT", "HTML_TEMPLATE"),
+      lex("{{ '#{' }} '}' }}"),
+    )
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT", "HTML_TEMPLATE"),
+      lex("{{ %q[#{] }} }] }}"),
     )
   }
 
