@@ -6,8 +6,10 @@ import com.intellij.psi.tree.IElementType;
 import com.mwnciau.rblade.psi.RBladeTypes;
 import com.intellij.psi.TokenType;
 import java.util.ArrayDeque;
+import java.util.Set;
 %%
 
+%public
 %class RBladeLexer
 %implements FlexLexer
 %unicode
@@ -21,10 +23,11 @@ import java.util.ArrayDeque;
 %{
     private int parentheses;
     private ArrayDeque<Integer> stateStack = new ArrayDeque<Integer>();
-    private ArrayDeque<Character> stringDelimiterStack = new ArrayDeque<Character>();
+    private ArrayDeque<Character> blockStack = new ArrayDeque<Character>();
     private boolean stringIsInterpolated;
     private String rubyBlockEndDelimiter;
     private String currentStatement = "";
+    private Set<String> naryStatements = Set.of("pushif", "prependif", "each", "eachelse", "eachwithindex", "eachwithindexelse", "props");
 
     private char flipBracket(char bracket){
         switch (bracket) {
@@ -37,21 +40,23 @@ import java.util.ArrayDeque;
     }
 %}
 
-STATEMENT_CHARACTER=[a-zA-Z_]
+RBLADE_END_STATEMENT=end[_A-Za-z\?]+
+RBLADE_STATEMENT_LITERAL={RBLADE_END_STATEMENT}|blank\?|break|case|checked|class|defined\?|delete|disabled|else|elsif|each|each_?else|each_?with_?index|each_?with_?index_?else|empty|empty\?|env|for|for_?else|if|method|next|nil\?|old|once|patch|prepend|prepend_?if|prepend_?once|present\?|production|props|push|push_?if|push_?once|put|read_?only|required|ruby|selected|should_?render|stack|style|unless|until|verbatim|when|while
 
-BEGIN_RBLADE_STATEMENT=\@{STATEMENT_CHARACTER}+[ \t]*\(
-RBLADE_EACH_STATEMENT=\@each(_?with_?index)?[ \t]*\(
-RBLADE_PROPS_STATEMENT=\@props[ \t]*\(
+BEGIN_RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}[ \t]*\(
 
-RBLADE_STATEMENT=\@{STATEMENT_CHARACTER}+
+RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}
 
-RBLADE_COMMENT=\{\{--[^]*?--\}\}|<%#[^]*?%>
+RBLADE_COMMENT=\{\{--~(--\}\})|<%#~(%>)
 
 RUBY_BLOCK_END=\}\}|%>|\!\!\}|\@end_?ruby|\)
 
 BLADE_START_CHARACTER=<|@|\{
 NON_RBLADE_CHARACTER=[^@<{]
 NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
+
+START_BLOCK=[{\[(|]
+END_BLOCK=[}\])]
 
 %state STATE_RUBY_BLOCK
 %state STATE_RUBY_BLOCK_END
@@ -84,6 +89,7 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
     @ruby                               {
                                             stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "@endruby";
+                                            currentStatement = "ruby";
                                             yybegin(STATE_RUBY_BLOCK);
                                             return RBladeTypes.RBLADE_STATEMENT;
                                         }
@@ -92,7 +98,7 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
                                             stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = ")";
                                             yybegin(STATE_RUBY_BLOCK);
-                                            currentStatement = yytext().toString().substring(1, yylength()-1).replace("_", "").toLowerCase();
+                                            currentStatement = yytext().toString().replaceAll("[^a-zA-Z]", "").toLowerCase();
 
                                             return RBladeTypes.RBLADE_STATEMENT;
                                             }
@@ -105,44 +111,62 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
 
 <STATE_RUBY_BLOCK> {
     {RUBY_BLOCK_END}                    {
-                                            if (
-                                              stateStack.getFirst() == STATE_RUBY_BLOCK_END
-                                              && rubyBlockEndDelimiter.equals(yytext().toString().replace("_", "").toLowerCase())
-                                            ) {
+                                            if (blockStack.isEmpty() && rubyBlockEndDelimiter.equals(yytext().toString().replace("_", "").toLowerCase())) {
                                                 yypushback(yylength());
                                                 yybegin(stateStack.removeFirst());
                                             } else {
-                                              if (yycharat(0) == ')') {
-                                                  yybegin(stateStack.removeFirst());
-                                              }
+                                                if (!blockStack.isEmpty() && blockStack.peekFirst() == yycharat(0)) {
+                                                    blockStack.removeFirst();
+                                                }
 
-                                              return RBladeTypes.RUBY_EXPRESSION;
+                                                return RBladeTypes.RUBY_EXPRESSION;
                                             }
                                         }
-    ,                                   { return stateStack.getFirst() == STATE_RUBY_BLOCK_END ? RBladeTypes.RBLADE_STATEMENT_COMMA : RBladeTypes.RUBY_EXPRESSION; }
+    {START_BLOCK}                       {
+                                            if (!blockStack.isEmpty() && yycharat(0) == '|' && blockStack.peekFirst() == '|') {
+                                                blockStack.removeFirst();
+                                            } else {
+                                                blockStack.addFirst(flipBracket(yycharat(0)));
+                                            }
+
+                                            return RBladeTypes.RUBY_EXPRESSION;
+                                        }
+    {END_BLOCK}                         {
+                                            if (!blockStack.isEmpty() && blockStack.peekFirst() == yycharat(0)) {
+                                                blockStack.removeFirst();
+                                            }
+
+                                            return RBladeTypes.RUBY_EXPRESSION;
+                                        }
+    ,                                   {
+                                          if (blockStack.isEmpty() && (naryStatements.contains(currentStatement))) {
+                                            return RBladeTypes.RBLADE_STATEMENT_COMMA;
+                                          } else {
+                                            return RBladeTypes.RUBY_EXPRESSION;
+                                          }
+                                        }
     \:                                  {
-                                            if (currentStatement.equals("props") && stateStack.getFirst() == STATE_RUBY_BLOCK_END) {
+                                            if (blockStack.isEmpty() && currentStatement.equals("props")) {
                                                 return RBladeTypes.RBLADE_STATEMENT_PROPS_COLON;
                                             }
 
                                             return RBladeTypes.RUBY_EXPRESSION;
                                         }
     \s+in\s+                            {
-                                            if (currentStatement.startsWith("each") && stateStack.getFirst() == STATE_RUBY_BLOCK_END) {
+                                            if (blockStack.isEmpty() && currentStatement.startsWith("each")) {
                                                 return RBladeTypes.RBLADE_STATEMENT_EACH_IN;
                                             }
 
                                             return RBladeTypes.RUBY_EXPRESSION;
                                         }
-    \(                                  { stateStack.addFirst(STATE_RUBY_BLOCK); return RBladeTypes.RUBY_EXPRESSION; }
     \"|\'|%[qQwWiIrsx]?.                {
                                             stateStack.addFirst(STATE_RUBY_BLOCK);
-                                            stringDelimiterStack.addFirst(flipBracket(yycharat(yylength() - 1)));
+                                            blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
                                             stringIsInterpolated = yycharat(0) == '"' || (yylength() == 3 && yytext().toString().substring(0, 2).equals("%Q"));
                                             yybegin(STATE_STRING_LITERAL);
                                             return RBladeTypes.RUBY_EXPRESSION;
                                         }
-    [^(\"\'%)}@,\s\:]+                  { return RBladeTypes.RUBY_EXPRESSION; }
+    [^\"\'%\[\](){}|@,\s\:]+            { return RBladeTypes.RUBY_EXPRESSION; }
     [^]                                 { return RBladeTypes.RUBY_EXPRESSION; }
 }
 <STATE_RUBY_BLOCK_END> {
@@ -164,8 +188,8 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
                                         }
     \\[^]                               { return RBladeTypes.RUBY_EXPRESSION; }
     [^]                                 {
-                                            if (yycharat(0) == stringDelimiterStack.getFirst()) {
-                                                stringDelimiterStack.removeFirst();
+                                            if (yycharat(0) == blockStack.getFirst()) {
+                                                blockStack.removeFirst();
                                                 yybegin(stateStack.removeFirst());
                                             }
                                             return RBladeTypes.RUBY_EXPRESSION;
@@ -177,7 +201,7 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
     \{                                  { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION); return RBladeTypes.RUBY_EXPRESSION; }
     \"|\'|%[qQwWiIrsx]?.                {
                                           stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
-                                          stringDelimiterStack.addFirst(flipBracket(yycharat(yylength() - 1)));
+                                          blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
                                           yybegin(STATE_STRING_LITERAL);
                                           return RBladeTypes.RUBY_EXPRESSION;
                                         }
