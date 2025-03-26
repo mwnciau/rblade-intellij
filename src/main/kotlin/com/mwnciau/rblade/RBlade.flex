@@ -41,7 +41,7 @@ import java.util.Set;
 %}
 
 RBLADE_END_STATEMENT=end[_A-Za-z\?]+
-RBLADE_STATEMENT_LITERAL={RBLADE_END_STATEMENT}|blank\?|break|case|checked|class|defined\?|delete|disabled|else|elsif|each|each_?else|each_?with_?index|each_?with_?index_?else|empty|empty\?|env|for|for_?else|if|method|next|nil\?|old|once|patch|prepend|prepend_?if|prepend_?once|present\?|production|props|push|push_?if|push_?once|put|read_?only|required|ruby|selected|should_?render|stack|style|unless|until|verbatim|when|while
+RBLADE_STATEMENT_LITERAL={RBLADE_END_STATEMENT}|blank\?|break|case|checked|class|defined\?|delete|disabled|else|elsif|each|each_?else|each_?with_?index|each_?with_?index_?else|empty|empty\?|env|for|for_?else|if|method|next|nil\?|old|once|patch|prepend|prepend_?if|prepend_?once|present\?|production|props|push|push_?if|push_?once|put|read_?only|required|ruby|selected|should_?render|stack|style|unless|until|when|while
 
 BEGIN_RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}[ \t]*\(
 
@@ -58,6 +58,7 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
 START_BLOCK=[{\[(|]
 END_BLOCK=[}\])]
 
+%state STATE_VERBATIM
 %state STATE_RUBY_BLOCK
 %state STATE_RUBY_BLOCK_END
 %state STATE_STRING_LITERAL
@@ -68,7 +69,10 @@ END_BLOCK=[}\])]
 
 <YYINITIAL> {
     {RBLADE_COMMENT}                    { return RBladeTypes.COMMENT; }
-
+    \@verbatim                           {
+                                          yybegin(STATE_VERBATIM);
+                                          return RBladeTypes.RBLADE_STATEMENT;
+                                        }
     \{\{                                {
                                             stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "}}";
@@ -108,6 +112,13 @@ END_BLOCK=[}\])]
     {BLADE_START_CHARACTER}             { return RBladeTypes.HTML_TEMPLATE; }
     {NON_RBLADE_STRING}                 { return RBladeTypes.HTML_TEMPLATE; }
     [^]                                 { return RBladeTypes.HTML_TEMPLATE; }
+}
+
+<STATE_VERBATIM> {
+  [^\@]+                                 {return RBladeTypes.HTML_TEMPLATE;}
+  \@end_?verbatim                        {return RBladeTypes.RBLADE_STATEMENT;}
+  \@                                     {return RBladeTypes.HTML_TEMPLATE;}
+  [^]                                   {return TokenType.BAD_CHARACTER;}
 }
 
 <STATE_RUBY_BLOCK> {

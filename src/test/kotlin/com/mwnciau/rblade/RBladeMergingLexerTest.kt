@@ -155,6 +155,8 @@ class RBladeMergingLexerTest {
             :errors="@model.errors"
             :except="[:name, :email]"
           />
+          {{ not ruby }}
+          {{-- not a comment --}}
         @endVerbatim
       """.trimIndent()),
     )
