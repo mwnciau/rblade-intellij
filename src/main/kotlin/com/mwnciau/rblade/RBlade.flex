@@ -47,6 +47,8 @@ BEGIN_RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}[ \t]*\(
 
 RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}
 
+ESCAPE_SEQUENCES=\<%%|\@\{\{|\@{RBLADE_STATEMENT}
+
 RBLADE_COMMENT=\{\{--~(--\}\})|<%#~(%>)
 
 RUBY_BLOCK_END=\}\}|%>|\!\!\}|\@end_?ruby|\)
@@ -69,7 +71,8 @@ END_BLOCK=[}\])]
 
 <YYINITIAL> {
     {RBLADE_COMMENT}                    { return RBladeTypes.COMMENT; }
-    \@verbatim                           {
+    {ESCAPE_SEQUENCES}                  { return RBladeTypes.HTML_TEMPLATE; }
+    \@verbatim                          {
                                           yybegin(STATE_VERBATIM);
                                           return RBladeTypes.RBLADE_STATEMENT;
                                         }

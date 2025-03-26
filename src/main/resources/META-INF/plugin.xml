@@ -20,6 +20,7 @@
             <h2>1.1.2 changes</h2>
             <ul>
                 <li>Fix code being parsed in verbatim statements</li>
+                <li>Fix escaped tags not being escaped (#10)</li>
             </ul>
         ]]>
     </change-notes>
