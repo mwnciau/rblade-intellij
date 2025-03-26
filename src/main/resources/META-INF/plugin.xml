@@ -17,12 +17,10 @@
 
     <change-notes>
         <![CDATA[
-            <h2>1.1.0 changes</h2>
+            <h2>1.1.1 changes</h2>
             <ul>
-                <li>Improve implementation of the embedded Ruby virtual file</li>
-                <li>Change highlighter colours</li>
-                <li>Improve Ruby parsing of statement parameters</li>
-                <li>Reduce error rate of RBlade lexer</li>
+                <li>Add tests for the RBLade lexer</li>
+                <li>Fix edge cases where files were not lexed correctly (#1, #2, #3, #6)</li>
             </ul>
         ]]>
     </change-notes>
