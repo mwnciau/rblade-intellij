@@ -25,6 +25,7 @@ class RBladeMergingLexerTest {
   fun testStatement() {
     assertEquals(listOf("RBLADE_STATEMENT"), lex("@props"))
     assertEquals(listOf("RBLADE_STATEMENT"), lex("@PROPS"))
+    assertEquals(listOf("RBLADE_STATEMENT", "RBLADE_STATEMENT"), lex("@props()"))
 
     assertEquals(listOf("RBLADE_STATEMENT"), lex("@prependif"))
     assertEquals(listOf("RBLADE_STATEMENT"), lex("@prepend_if"))
@@ -110,6 +111,12 @@ class RBladeMergingLexerTest {
     assertEquals(
       listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT", "HTML_TEMPLATE"),
       lex("{{ %q[#{] }} }] }}"),
+    )
+
+    // The %> tag should be properly parsed, not as a percent string!
+    assertEquals(
+      listOf("RBLADE_STATEMENT", "RUBY_EXPRESSION", "RBLADE_STATEMENT"),
+      lex("<% blah %>"),
     )
   }
 
