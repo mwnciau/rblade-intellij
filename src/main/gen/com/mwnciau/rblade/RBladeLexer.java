@@ -121,7 +121,7 @@ public class RBladeLexer implements FlexLexer {
     "\20\0\1\26\6\0\1\20\46\0\2\25\1\0\1\27"+
     "\24\0\1\30\2\0\1\31\13\0\2\1\30\0\1\25"+
     "\10\0\1\25\2\0\1\32\22\0\1\1\10\0\1\1"+
-    "\12\0\1\25\24\0\1\1\53\0\1\33\22\0\1\25"+
+    "\12\0\1\25\24\0\1\1\53\0\1\33\22\0\1\34"+
     "\4\0";
 
   private static int [] zzUnpackAction() {
@@ -774,12 +774,12 @@ public class RBladeLexer implements FlexLexer {
             { return RBladeTypes.HTML_TEMPLATE;
             }
           // fall through
-          case 28: break;
+          case 29: break;
           case 2:
             { return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 29: break;
+          case 30: break;
           case 3:
             { stateStack.addFirst(STATE_RUBY_BLOCK);
                                             blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
@@ -788,7 +788,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 30: break;
+          case 31: break;
           case 4:
             { if (!blockStack.isEmpty() && yycharat(0) == '|' && blockStack.peekFirst() == '|') {
                                                 blockStack.removeFirst();
@@ -799,7 +799,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 31: break;
+          case 32: break;
           case 5:
             { if (blockStack.isEmpty() && rubyBlockEndDelimiter.equals(yytext().toString().replace("_", "").toLowerCase())) {
                                                 yypushback(yylength());
@@ -813,7 +813,7 @@ public class RBladeLexer implements FlexLexer {
                                             }
             }
           // fall through
-          case 32: break;
+          case 33: break;
           case 6:
             { if (blockStack.isEmpty() && (naryStatements.contains(currentStatement))) {
                                             return RBladeTypes.RBLADE_STATEMENT_COMMA;
@@ -822,7 +822,7 @@ public class RBladeLexer implements FlexLexer {
                                           }
             }
           // fall through
-          case 33: break;
+          case 34: break;
           case 7:
             { if (blockStack.isEmpty() && currentStatement.equals("props")) {
                                                 return RBladeTypes.RBLADE_STATEMENT_PROPS_COLON;
@@ -831,7 +831,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 34: break;
+          case 35: break;
           case 8:
             { if (!blockStack.isEmpty() && blockStack.peekFirst() == yycharat(0)) {
                                                 blockStack.removeFirst();
@@ -840,19 +840,19 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 35: break;
+          case 36: break;
           case 9:
             { return TokenType.BAD_CHARACTER;
             }
           // fall through
-          case 36: break;
+          case 37: break;
           case 10:
             { yybegin(YYINITIAL);
                                           currentStatement = "";
                                           return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 37: break;
+          case 38: break;
           case 11:
             { if (yycharat(0) == blockStack.getFirst()) {
                                                 blockStack.removeFirst();
@@ -862,7 +862,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 38: break;
+          case 39: break;
           case 12:
             { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
                                           blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
@@ -871,24 +871,24 @@ public class RBladeLexer implements FlexLexer {
                                           return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 39: break;
+          case 40: break;
           case 13:
             { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION); return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 40: break;
+          case 41: break;
           case 14:
             { yybegin(stateStack.removeFirst()); return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 41: break;
+          case 42: break;
           case 15:
             { yybegin(stateStack.removeFirst());
 
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 42: break;
+          case 43: break;
           case 16:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "%>";
@@ -896,7 +896,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 43: break;
+          case 44: break;
           case 17:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "}}";
@@ -904,7 +904,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 44: break;
+          case 45: break;
           case 18:
             { stateStack.addFirst(STATE_RUBY_BLOCK);
                                             yypushback(1);
@@ -913,7 +913,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 45: break;
+          case 46: break;
           case 19:
             { if (stringIsInterpolated) {
                                               stateStack.addFirst(STATE_STRING_LITERAL);
@@ -922,7 +922,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 46: break;
+          case 47: break;
           case 20:
             { yypushback(1);
                                             stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
@@ -931,12 +931,12 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 47: break;
+          case 48: break;
           case 21:
             { return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 48: break;
+          case 49: break;
           case 22:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "!!}";
@@ -944,7 +944,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 49: break;
+          case 50: break;
           case 23:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = ")";
@@ -954,7 +954,7 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 50: break;
+          case 51: break;
           case 24:
             { if (blockStack.isEmpty() && currentStatement.startsWith("each")) {
                                                 return RBladeTypes.RBLADE_STATEMENT_EACH_IN;
@@ -963,12 +963,12 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RUBY_EXPRESSION;
             }
           // fall through
-          case 51: break;
+          case 52: break;
           case 25:
             { return RBladeTypes.COMMENT;
             }
           // fall through
-          case 52: break;
+          case 53: break;
           case 26:
             { stateStack.addFirst(STATE_RUBY_BLOCK_END);
                                             rubyBlockEndDelimiter = "@endruby";
@@ -977,13 +977,18 @@ public class RBladeLexer implements FlexLexer {
                                             return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 53: break;
+          case 54: break;
           case 27:
             { yybegin(STATE_VERBATIM);
                                           return RBladeTypes.RBLADE_STATEMENT;
             }
           // fall through
-          case 54: break;
+          case 55: break;
+          case 28:
+            { yybegin(YYINITIAL); return RBladeTypes.RBLADE_STATEMENT;
+            }
+          // fall through
+          case 56: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

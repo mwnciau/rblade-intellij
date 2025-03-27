@@ -119,7 +119,7 @@ END_BLOCK=[}\])]
 
 <STATE_VERBATIM> {
   [^\@]+                                 {return RBladeTypes.HTML_TEMPLATE;}
-  \@end_?verbatim                        {return RBladeTypes.RBLADE_STATEMENT;}
+  \@end_?verbatim                        {yybegin(YYINITIAL); return RBladeTypes.RBLADE_STATEMENT;}
   \@                                     {return RBladeTypes.HTML_TEMPLATE;}
   [^]                                   {return TokenType.BAD_CHARACTER;}
 }
