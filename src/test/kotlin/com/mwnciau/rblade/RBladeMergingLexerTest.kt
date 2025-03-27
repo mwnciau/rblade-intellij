@@ -33,6 +33,9 @@ class RBladeMergingLexerTest {
     assertEquals(listOf("RBLADE_STATEMENT"), lex("@eachwithIndexElse"))
     assertEquals(listOf("RBLADE_STATEMENT"), lex("@each_with_index_else"))
 
+    assertEquals(listOf("RBLADE_STATEMENT"), lex("@endIf"))
+    assertEquals(listOf("RBLADE_STATEMENT"), lex("@end_if"))
+    assertEquals(listOf("RBLADE_STATEMENT"), lex("@end"))
 
     assertEquals(listOf("HTML_TEMPLATE"), lex("@notAStatement"))
   }

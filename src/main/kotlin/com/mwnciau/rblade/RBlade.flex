@@ -40,7 +40,7 @@ import java.util.Set;
     }
 %}
 
-RBLADE_END_STATEMENT=end[_A-Za-z\?]+
+RBLADE_END_STATEMENT=end[_A-Za-z\?]*
 RBLADE_STATEMENT_LITERAL={RBLADE_END_STATEMENT}|blank\?|break|case|checked|class|defined\?|delete|disabled|else|elsif|each|each_?else|each_?with_?index|each_?with_?index_?else|empty|empty\?|env|for|for_?else|if|method|next|nil\?|old|once|patch|prepend|prepend_?if|prepend_?once|present\?|production|props|push|push_?if|push_?once|put|read_?only|required|ruby|selected|should_?render|stack|style|unless|until|when|while
 
 BEGIN_RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}[ \t]*\(
