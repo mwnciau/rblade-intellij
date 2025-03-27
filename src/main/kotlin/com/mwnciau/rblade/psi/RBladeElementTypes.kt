@@ -9,7 +9,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
 
 class RBladeElementTypes {
   companion object {
-    val TEMPLATE_DATA = TemplateDataElementType("RBLADE_TEMPLATE_DATA", RubyLanguage.INSTANCE, RBladeTypes.HTML_TEMPLATE, RBladeTypes.RBLADE_INJECTION_IN_HTML)
+    val TEMPLATE_DATA = TemplateDataElementType("RBLADE_TEMPLATE_DATA", RBladeLanguage.INSTANCE, RBladeTypes.HTML_TEMPLATE, RBladeTypes.RBLADE_INJECTION_IN_HTML)
     val RBLADE_FILE = IStubFileElementType<PsiFileStub<RBladeFile>>("RBLADE_FILE", RBladeLanguage.INSTANCE)
     val RUBY_CODE_IN_RBLADE_ROOT = RubyCodeInRBladeType("RUBY_CODE_IN_RBLADE_ROOT")
   }
