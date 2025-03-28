@@ -5,33 +5,33 @@ import org.junit.Test
 class RBladeVerbatimTest : RBladeTest() {
   @Test
   fun testVerbatim() {
-    assertLexesTo("@verbatim Hi @endVerbatim", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: Hi ", "RBLADE_STATEMENT:@endVerbatim")
-    assertLexesTo("@Verbatim Hi @EndVerbatim", "RBLADE_STATEMENT:@Verbatim", "HTML_TEMPLATE: Hi ", "RBLADE_STATEMENT:@EndVerbatim")
-    assertLexesTo("@verbatim Hi @end_verbatim", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: Hi ", "RBLADE_STATEMENT:@end_verbatim")
+    assertLexesTo("@verbatim Hi @endVerbatim", "RBLADE:@verbatim", " Hi ", "RBLADE:@endVerbatim")
+    assertLexesTo("@Verbatim Hi @EndVerbatim", "RBLADE:@Verbatim", " Hi ", "RBLADE:@EndVerbatim")
+    assertLexesTo("@verbatim Hi @end_verbatim", "RBLADE:@verbatim", " Hi ", "RBLADE:@end_verbatim")
   }
 
   @Test
   fun testStatements() {
-    assertLexesTo("@verbatim @endIf @endVerbatim", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: @endIf ", "RBLADE_STATEMENT:@endVerbatim")
-    assertLexesTo("@verbatim @props() @endVerbatim", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: @props() ", "RBLADE_STATEMENT:@endVerbatim")
+    assertLexesTo("@verbatim @endIf @endVerbatim", "RBLADE:@verbatim", " @endIf ", "RBLADE:@endVerbatim")
+    assertLexesTo("@verbatim @props() @endVerbatim", "RBLADE:@verbatim", " @props() ", "RBLADE:@endVerbatim")
   }
 
   @Test
   fun testInjections() {
-    assertLexesTo("@verbatim {{ abc }} @endVerbatim", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: {{ abc }} ", "RBLADE_STATEMENT:@endVerbatim")
-    assertLexesTo("@verbatim <%= abc %> @endVerbatim", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: <%= abc %> ", "RBLADE_STATEMENT:@endVerbatim")
-    assertLexesTo("@verbatim @ruby abc @endRuby @endVerbatim", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: @ruby abc @endRuby ", "RBLADE_STATEMENT:@endVerbatim")
+    assertLexesTo("@verbatim {{ abc }} @endVerbatim", "RBLADE:@verbatim", " {{ abc }} ", "RBLADE:@endVerbatim")
+    assertLexesTo("@verbatim <%= abc %> @endVerbatim", "RBLADE:@verbatim", " <%= abc %> ", "RBLADE:@endVerbatim")
+    assertLexesTo("@verbatim @ruby abc @endRuby @endVerbatim", "RBLADE:@verbatim", " @ruby abc @endRuby ", "RBLADE:@endVerbatim")
   }
 
   @Test
   fun testBoundaries() {
-    assertLexesTo("@verbatimhi@endVerbatim", "HTML_TEMPLATE:@verbatimhi@endVerbatim")
-    assertLexesTo("@verbatim hi@endVerbatim", "HTML_TEMPLATE:@verbatim hi@endVerbatim")
-    assertLexesTo("@verbatimhi @endVerbatim", "HTML_TEMPLATE:@verbatimhi @endVerbatim")
-    assertLexesTo("hi@verbatim @endVerbatim", "HTML_TEMPLATE:hi@verbatim @endVerbatim")
+    assertLexesTo("@verbatimhi@endVerbatim", "@verbatimhi@endVerbatim")
+    assertLexesTo("@verbatim hi@endVerbatim", "@verbatim hi@endVerbatim")
+    assertLexesTo("@verbatimhi @endVerbatim", "@verbatimhi @endVerbatim")
+    assertLexesTo("hi@verbatim @endVerbatim", "hi@verbatim @endVerbatim")
 
-    assertLexesTo(">@verbatim Hi @endVerbatim", "HTML_TEMPLATE:>", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: Hi ", "RBLADE_STATEMENT:@endVerbatim")
-    assertLexesTo("'@verbatim Hi @endVerbatim", "HTML_TEMPLATE:'", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: Hi ", "RBLADE_STATEMENT:@endVerbatim")
-    assertLexesTo(".@verbatim Hi @endVerbatim", "HTML_TEMPLATE:.", "RBLADE_STATEMENT:@verbatim", "HTML_TEMPLATE: Hi ", "RBLADE_STATEMENT:@endVerbatim")
+    assertLexesTo(">@verbatim Hi @endVerbatim", ">", "RBLADE:@verbatim", " Hi ", "RBLADE:@endVerbatim")
+    assertLexesTo("'@verbatim Hi @endVerbatim", "'", "RBLADE:@verbatim", " Hi ", "RBLADE:@endVerbatim")
+    assertLexesTo(".@verbatim Hi @endVerbatim", ".", "RBLADE:@verbatim", " Hi ", "RBLADE:@endVerbatim")
   }
 }

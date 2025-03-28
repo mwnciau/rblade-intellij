@@ -24,9 +24,9 @@ class RBladeCommentsTest : RBladeTest() {
   @Test
   fun testMultiple() {
     assertLexesTo("{{-- 1 --}}{{-- 2 --}}", "COMMENT:{{-- 1 --}}", "COMMENT:{{-- 2 --}}")
-    assertLexesTo("1{{-- 2 --}}3{{-- 4 --}}5", "HTML_TEMPLATE:1", "COMMENT:{{-- 2 --}}", "HTML_TEMPLATE:3", "COMMENT:{{-- 4 --}}", "HTML_TEMPLATE:5")
+    assertLexesTo("1{{-- 2 --}}3{{-- 4 --}}5", "1", "COMMENT:{{-- 2 --}}", "3", "COMMENT:{{-- 4 --}}", "5")
 
     assertLexesTo("<%#comment%><%#comment 2%>", "COMMENT:<%#comment%>", "COMMENT:<%#comment 2%>")
-    assertLexesTo("1<%# 2 %>3<%# 4 %>5", "HTML_TEMPLATE:1", "COMMENT:<%# 2 %>", "HTML_TEMPLATE:3", "COMMENT:<%# 4 %>", "HTML_TEMPLATE:5")
+    assertLexesTo("1<%# 2 %>3<%# 4 %>5", "1", "COMMENT:<%# 2 %>", "3", "COMMENT:<%# 4 %>", "5")
   }
 }
