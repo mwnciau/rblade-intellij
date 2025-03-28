@@ -34,4 +34,9 @@ class RBladeVerbatimTest : RBladeTest() {
     assertLexesTo("'@verbatim Hi @endVerbatim", "'", "RBLADE:@verbatim", " Hi ", "RBLADE:@endVerbatim")
     assertLexesTo(".@verbatim Hi @endVerbatim", ".", "RBLADE:@verbatim", " Hi ", "RBLADE:@endVerbatim")
   }
+
+  @Test
+  fun testVerbatimInWeirdPlaces() {
+    assertLexesTo("@if(@verbatim {{ blah }} @endVerbatim)", "RBLADE:@if(", "RBLADE:@verbatim(", "RB: {{ blah }} ", "RBLADE:@endVerbatim", "RBLADE:)")
+  }
 }

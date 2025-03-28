@@ -40,14 +40,14 @@ import java.util.Set;
     }
 %}
 
-RBLADE_END_STATEMENT=end[_A-Za-z\?]*
+RBLADE_END_STATEMENT=end[_A-Za-z]*[\?!]?
 RBLADE_STATEMENT_LITERAL={RBLADE_END_STATEMENT}|blank\?|break|case|checked|class|defined\?|delete|disabled|else|elsif|each|each_?else|each_?with_?index|each_?with_?index_?else|empty|empty\?|env|for|for_?else|if|method|next|nil\?|old|once|patch|prepend|prepend_?if|prepend_?once|present\?|production|props|push|push_?if|push_?once|put|read_?only|required|ruby|selected|should_?render|stack|style|unless|until|when|while
 
 BEGIN_RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}[ \t]*\(
 
 RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}
 
-ESCAPE_SEQUENCES=\<%%|\@\{\{|\@{RBLADE_STATEMENT}
+ESCAPE_SEQUENCES=\<%%|\@\{\{|\@\{\!\!|\@{RBLADE_STATEMENT}
 
 RBLADE_COMMENT=\{\{--~(--\}\})|<%#~(%>)
 
@@ -60,7 +60,9 @@ NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
 START_BLOCK=[{\[(|]
 END_BLOCK=[}\])]
 
-%state STATE_VERBATIM
+// Verbatim to prevent other rules affecting the contents of verbatim blocks
+%xstate STATE_VERBATIM
+%states RBLADE_RUBY RBLADE_PRINT RBLADE_UNSAFE_PRINT ERB_STATEMENT
 %state STATE_RUBY_BLOCK
 %state STATE_RUBY_BLOCK_END
 %state STATE_STRING_LITERAL
@@ -69,38 +71,36 @@ END_BLOCK=[}\])]
 
 %%
 
+// RBlade verbatims and comments should take the highest priority so extend the matching text to the end of the file
+\@verbatim/~(\@end_?verbatim)[^]* {
+  yybegin(STATE_VERBATIM);
+  return RBladeTypes.RBLADE_STATEMENT;
+}
+
+{RBLADE_COMMENT}/[^]* {
+    return RBladeTypes.COMMENT;
+}
+
 <YYINITIAL> {
-    {RBLADE_COMMENT}                    { return RBladeTypes.COMMENT; }
-    {ESCAPE_SEQUENCES}                  { return RBladeTypes.HTML_TEMPLATE; }
-    \@verbatim                          {
-                                          yybegin(STATE_VERBATIM);
-                                          return RBladeTypes.RBLADE_STATEMENT;
-                                        }
-    \{\{                                {
-                                            stateStack.addFirst(STATE_RUBY_BLOCK_END);
-                                            rubyBlockEndDelimiter = "}}";
-                                            yybegin(STATE_RUBY_BLOCK);
-                                            return RBladeTypes.RBLADE_STATEMENT;
-                                        }
-    \{\!\!                              {
-                                            stateStack.addFirst(STATE_RUBY_BLOCK_END);
-                                            rubyBlockEndDelimiter = "!!}";
-                                            yybegin(STATE_RUBY_BLOCK);
-                                            return RBladeTypes.RBLADE_STATEMENT;
-                                        }
-    \<%=?=?                             {
-                                            stateStack.addFirst(STATE_RUBY_BLOCK_END);
-                                            rubyBlockEndDelimiter = "%>";
-                                            yybegin(STATE_RUBY_BLOCK);
-                                            return RBladeTypes.RBLADE_STATEMENT;
-                                        }
-    @ruby                               {
-                                            stateStack.addFirst(STATE_RUBY_BLOCK_END);
-                                            rubyBlockEndDelimiter = "@endruby";
-                                            currentStatement = "ruby";
-                                            yybegin(STATE_RUBY_BLOCK);
-                                            return RBladeTypes.RBLADE_STATEMENT;
-                                        }
+    {ESCAPE_SEQUENCES}/[^]* {
+      return RBladeTypes.HTML_TEMPLATE;
+    }
+    \{\{/~(\}\}) {
+      yybegin(RBLADE_PRINT);
+      return RBladeTypes.RBLADE_STATEMENT;
+    }
+    \{\!\!/~(\!\!\}) {
+      yybegin(RBLADE_UNSAFE_PRINT);
+      return RBladeTypes.RBLADE_STATEMENT;
+    }
+    \@ruby/!([a-zA-Z0-9])~(\@end_?ruby) {
+      yybegin(RBLADE_RUBY);
+      return RBladeTypes.RBLADE_STATEMENT;
+    }
+    \<%=?=?/~(%\>) {
+      yybegin(ERB_STATEMENT);
+      return RBladeTypes.RBLADE_STATEMENT;
+    }
 
     {BEGIN_RBLADE_STATEMENT}            {
                                             stateStack.addFirst(STATE_RUBY_BLOCK_END);
@@ -114,7 +114,45 @@ END_BLOCK=[}\])]
 
     {BLADE_START_CHARACTER}             { return RBladeTypes.HTML_TEMPLATE; }
     {NON_RBLADE_STRING}                 { return RBladeTypes.HTML_TEMPLATE; }
+    [a-zA-Z0-9_]                        { return RBladeTypes.HTML_TEMPLATE; }
     [^]                                 { return RBladeTypes.HTML_TEMPLATE; }
+}
+
+<RBLADE_RUBY> {
+  \@end_?ruby {
+    yybegin(YYINITIAL);
+    return RBladeTypes.RBLADE_STATEMENT;
+  }
+  [^] {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+}
+<RBLADE_PRINT> {
+  \}\} {
+    yybegin(YYINITIAL);
+    return RBladeTypes.RBLADE_STATEMENT;
+  }
+  [^] {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+}
+<RBLADE_UNSAFE_PRINT> {
+  \!\!\} {
+    yybegin(YYINITIAL);
+    return RBladeTypes.RBLADE_STATEMENT;
+  }
+  [^] {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+}
+<ERB_STATEMENT> {
+  %> {
+    yybegin(YYINITIAL);
+    return RBladeTypes.RBLADE_STATEMENT;
+  }
+  [^] {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
 }
 
 <STATE_VERBATIM> {

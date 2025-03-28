@@ -29,4 +29,10 @@ class RBladeCommentsTest : RBladeTest() {
     assertLexesTo("<%#comment%><%#comment 2%>", "COMMENT:<%#comment%>", "COMMENT:<%#comment 2%>")
     assertLexesTo("1<%# 2 %>3<%# 4 %>5", "1", "COMMENT:<%# 2 %>", "3", "COMMENT:<%# 4 %>", "5")
   }
+
+  @Test
+  fun testCommentInWeirdPlaces() {
+    assertLexesTo("@if({{--comment--}})", "RBLADE:@if(", "COMMENT:{{--comment--}}", "RBLADE:)")
+    assertLexesTo("@if(<%#comment--%>)", "RBLADE:@if(", "COMMENT:<%#comment--%>", "RBLADE:)")
+  }
 }

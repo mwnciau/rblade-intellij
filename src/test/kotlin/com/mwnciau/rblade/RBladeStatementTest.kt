@@ -62,6 +62,7 @@ class RBladeStatementTest : RBladeTest() {
     assertLexesTo("@if((((((((((()))))))))))", "RBLADE:@if(", "RB:(((((((((())))))))))", "RBLADE:)")
     assertLexesTo("@if(()()(())()((()))(()()))", "RBLADE:@if(", "RB:()()(())()((()))(()())", "RBLADE:)")
     assertLexesTo("@if(((())),((())))", "RBLADE:@if(", "RB:((())),((()))", "RBLADE:)")
+    assertLexesTo("@if({{ }})", "RBLADE:@if(", "{{ }}", "RBLADE:)")
 
     assertLexesTo("@if(1,\n2)", "RBLADE:@if(", "RB:1,\n2", "RBLADE:)")
     assertLexesTo("@if(1)\n,2)", "RBLADE:@if(", "RB:1", "RBLADE:)", "\n,2)")

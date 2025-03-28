@@ -212,12 +212,12 @@ class RBladeInjectionTest : RBladeTest() {
     assertLexesTo("<% '<%' %>", "RBLADE:<%", "RB: '<%' ", "RBLADE:%>")
 
     // While problematic, RBlade will not parse the opening tag without the end tag
-    assertLexesTo("{{ @if", "RBLADE:{{", " ", "RBLADE:@if")
-    assertLexesTo("{!! @if", "RBLADE:{!!", " ", "RBLADE:@if")
-    assertLexesTo("@ruby @if", "RBLADE:@ruby", " ", "RBLADE:@if")
-    assertLexesTo("<% @if", "RBLADE:<%", " ", "RBLADE:@if")
-    assertLexesTo("<%= @if", "RBLADE:<%=", " ", "RBLADE:@if")
-    assertLexesTo("<%== @if", "RBLADE:<%==", " ", "RBLADE:@if")
+    assertLexesTo("{{ @if", "{{ ", "RBLADE:@if")
+    assertLexesTo("{!! @if", "{!! ", "RBLADE:@if")
+    assertLexesTo("@ruby @if", "@ruby ", "RBLADE:@if")
+    assertLexesTo("<% @if", "<% ", "RBLADE:@if")
+    assertLexesTo("<%= @if", "<%= ", "RBLADE:@if")
+    assertLexesTo("<%== @if", "<%== ", "RBLADE:@if")
 
     // RBlade Ruby statements have stricter boundaries
     assertLexesTo("@ruby@endRuby", "@ruby@endRuby")
