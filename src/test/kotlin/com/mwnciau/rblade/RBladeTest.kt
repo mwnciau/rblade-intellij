@@ -27,7 +27,9 @@ open class RBladeTest {
       "RBLADE_STATEMENT" -> "RBLADE:"
       "COMMENT" -> "COMMENT:"
       "RBLADE_STATEMENT_COMMA" -> "COMMA:"
-      else -> ""
+      "HTML_TEMPLATE" -> ""
+      "RBLADE_STATEMENT_EACH_IN" -> ""
+      else -> tokenType.toString() + ""
     }
   }
 

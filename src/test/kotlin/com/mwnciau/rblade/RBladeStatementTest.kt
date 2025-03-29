@@ -62,16 +62,18 @@ class RBladeStatementTest : RBladeTest() {
     assertLexesTo("@if((((((((((()))))))))))", "RBLADE:@if(", "RB:(((((((((())))))))))", "RBLADE:)")
     assertLexesTo("@if(()()(())()((()))(()()))", "RBLADE:@if(", "RB:()()(())()((()))(()())", "RBLADE:)")
     assertLexesTo("@if(((())),((())))", "RBLADE:@if(", "RB:((())),((()))", "RBLADE:)")
-    assertLexesTo("@if({{ }})", "RBLADE:@if(", "{{ }}", "RBLADE:)")
+    assertLexesTo("@if({{ }})", "RBLADE:@if(", "RB:{{ }}", "RBLADE:)")
 
     assertLexesTo("@if(1,\n2)", "RBLADE:@if(", "RB:1,\n2", "RBLADE:)")
     assertLexesTo("@if(1)\n,2)", "RBLADE:@if(", "RB:1", "RBLADE:)", "\n,2)")
-    assertLexesTo("@if(1,)\n(2 + (3)),\n4) @if()", "RBLADE:@if(", "RB:1", "COMMA:,", "RBLADE:)", "\n(2 + (3)),\n4) ", "RBLADE:@if(", "RBLADE:)")
+    assertLexesTo("@if(1,)\n(2 + (3)),\n4) @if()", "RBLADE:@if(", "RB:1,", "RBLADE:)", "\n(2 + (3)),\n4) ", "RBLADE:@if(", "RBLADE:)")
 
     assertLexesTo("( @if())", "( ", "RBLADE:@if(", "RBLADE:)", ")")
     assertLexesTo("@if)", "RBLADE:@if", ")")
-    assertLexesTo("@if(", "RBLADE:@if", "(")
-    assertLexesTo("@if(()(()", "RBLADE:@if", "(()(()")
+
+    // RBlade is able to detect that these parentheses don't match, but due to limitations in JFlex, we assume they do
+    assertLexesTo("@if(", "RBLADE:@if(")
+    assertLexesTo("@if(()(()", "RBLADE:@if(", "RB:()(()")
   }
 
   @Test

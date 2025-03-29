@@ -27,8 +27,8 @@ class RBladeVerbatimTest : RBladeTest() {
   fun testBoundaries() {
     assertLexesTo("@verbatimhi@endVerbatim", "@verbatimhi@endVerbatim")
     assertLexesTo("@verbatim hi@endVerbatim", "@verbatim hi@endVerbatim")
-    assertLexesTo("@verbatimhi @endVerbatim", "@verbatimhi @endVerbatim")
-    assertLexesTo("hi@verbatim @endVerbatim", "hi@verbatim @endVerbatim")
+    assertLexesTo("@verbatimhi @endVerbatim", "@verbatimhi ", "RBLADE:@endVerbatim")
+    assertLexesTo("hi@verbatim @endVerbatim", "hi@verbatim ", "RBLADE:@endVerbatim")
 
     assertLexesTo(">@verbatim Hi @endVerbatim", ">", "RBLADE:@verbatim", " Hi ", "RBLADE:@endVerbatim")
     assertLexesTo("'@verbatim Hi @endVerbatim", "'", "RBLADE:@verbatim", " Hi ", "RBLADE:@endVerbatim")
@@ -37,6 +37,6 @@ class RBladeVerbatimTest : RBladeTest() {
 
   @Test
   fun testVerbatimInWeirdPlaces() {
-    assertLexesTo("@if(@verbatim {{ blah }} @endVerbatim)", "RBLADE:@if(", "RBLADE:@verbatim(", "RB: {{ blah }} ", "RBLADE:@endVerbatim", "RBLADE:)")
+    assertLexesTo("@if(@verbatim {{ blah }} @endVerbatim)", "RBLADE:@if(", "RBLADE:@verbatim", "RB: {{ blah }} ", "RBLADE:@endVerbatim", "RBLADE:)")
   }
 }
