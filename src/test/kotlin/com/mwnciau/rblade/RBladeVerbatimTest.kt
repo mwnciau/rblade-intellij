@@ -38,5 +38,11 @@ class RBladeVerbatimTest : RBladeTest() {
   @Test
   fun testVerbatimInWeirdPlaces() {
     assertLexesTo("@if(@verbatim {{ blah }} @endVerbatim)", "RBLADE:@if(", "RBLADE:@verbatim", "RB: {{ blah }} ", "RBLADE:@endVerbatim", "RBLADE:)")
+    assertLexesTo("@if(\"#{ @verbatim blah @endVerbatim }\")", "RBLADE:@if(", "RB:\"#{ ", "RBLADE:@verbatim", "RB: blah ", "RBLADE:@endVerbatim", "RB: }\"", "RBLADE:)")
+    assertLexesTo("@if({ @verbatim blah @endVerbatim })", "RBLADE:@if(", "RB:{ ", "RBLADE:@verbatim", "RB: blah ", "RBLADE:@endVerbatim", "RB: }", "RBLADE:)")
+    assertLexesTo("@if(( @verbatim blah @endVerbatim ))", "RBLADE:@if(", "RB:( ", "RBLADE:@verbatim", "RB: blah ", "RBLADE:@endVerbatim", "RB: )", "RBLADE:)")
+    assertLexesTo("@if([ @verbatim blah @endVerbatim ])", "RBLADE:@if(", "RB:[ ", "RBLADE:@verbatim", "RB: blah ", "RBLADE:@endVerbatim", "RB: ]", "RBLADE:)")
+    assertLexesTo("@if(' @verbatim blah @endVerbatim ')", "RBLADE:@if(", "RB:' ", "RBLADE:@verbatim", "RB: blah ", "RBLADE:@endVerbatim", "RB: '", "RBLADE:)")
+    assertLexesTo("@if(\" @verbatim blah @endVerbatim \")", "RBLADE:@if(", "RB:\" ", "RBLADE:@verbatim", "RB: blah ", "RBLADE:@endVerbatim", "RB: \"", "RBLADE:)")
   }
 }

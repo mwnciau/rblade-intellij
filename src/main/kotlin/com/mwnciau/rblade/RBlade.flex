@@ -277,7 +277,7 @@ STRING_START_CHARACTERS=[\"'%?]
   \?[^] {
     return RBladeTypes.RUBY_EXPRESSION;
   }
-  [^{STRING_START_CHARACTERS}\[(){@,\s\:]+ {
+  [^@{STRING_START_CHARACTERS}\[(){@,\s\:]+ {
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
@@ -294,7 +294,7 @@ STRING_START_CHARACTERS=[\"'%?]
     stateStack.addFirst(MATCHED_PARENTHESES);
     return RBladeTypes.RUBY_EXPRESSION;
   }
-  [^{STRING_START_CHARACTERS}()]+ {
+  [^@{STRING_START_CHARACTERS}()]+ {
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
@@ -310,7 +310,7 @@ STRING_START_CHARACTERS=[\"'%?]
     stateStack.addFirst(MATCHED_BRACES);
     return RBladeTypes.RUBY_EXPRESSION;
   }
-  [^{STRING_START_CHARACTERS}{}]+ {
+  [^@{STRING_START_CHARACTERS}{}]+ {
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
@@ -326,7 +326,7 @@ STRING_START_CHARACTERS=[\"'%?]
     stateStack.addFirst(MATCHED_BRACKETS);
     return RBladeTypes.RUBY_EXPRESSION;
   }
-  [^{STRING_START_CHARACTERS}\[\]]+ {
+  [^@{STRING_START_CHARACTERS}\[\]]+ {
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
@@ -382,7 +382,7 @@ STRING_START_CHARACTERS=[\"'%?]
     stateStack.addFirst(STATE_STRING_INTERPOLATION);
     return RBladeTypes.RUBY_EXPRESSION;
   }
-  [^\{\}{STRING_START_CHARACTERS}]+ {
+  [^\{\}@{STRING_START_CHARACTERS}]+ {
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
