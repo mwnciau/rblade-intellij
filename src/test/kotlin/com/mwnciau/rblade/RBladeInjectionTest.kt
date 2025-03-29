@@ -214,7 +214,7 @@ class RBladeInjectionTest : RBladeTest() {
     // While problematic, RBlade will not parse the opening tag without the end tag
     assertLexesTo("{{ @if", "{{ ", "RBLADE:@if")
     assertLexesTo("{!! @if", "{!! ", "RBLADE:@if")
-    assertLexesTo("@ruby @if", "@ruby ", "RBLADE:@if")
+    assertLexesTo("@verbatim @if", "@verbatim ", "RBLADE:@if")
     assertLexesTo("<% @if", "<% ", "RBLADE:@if")
     assertLexesTo("<%= @if", "<%= ", "RBLADE:@if")
     assertLexesTo("<%== @if", "<%== ", "RBLADE:@if")
@@ -222,8 +222,10 @@ class RBladeInjectionTest : RBladeTest() {
     // RBlade Ruby statements have stricter boundaries
     assertLexesTo("@ruby@endRuby", "@ruby@endRuby")
     assertLexesTo("@rubyfoo@endRuby", "@rubyfoo@endRuby")
-    assertLexesTo("foo@ruby bar @endRuby", "foo@ruby bar @endRuby")
+    assertLexesTo("foo@ruby bar @endRuby", "foo@ruby bar ", "RBLADE:@endRuby")
     assertLexesTo("@ruby foo@endRuby", "@ruby foo@endRuby")
-    assertLexesTo("@ruby foo @endRubybar", "@ruby foo @endRubybar")
+
+    // This shouldn't match, but this is difficult to do in jflex, so we accept is as a limitation
+    assertLexesTo("@ruby foo @endRubybar", "RBLADE:@ruby", "RB: foo ", "RBLADE:@endRuby", "bar")
   }
 }

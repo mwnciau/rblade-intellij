@@ -27,6 +27,7 @@ import java.util.Set;
     private boolean stringIsInterpolated;
     private String rubyBlockEndDelimiter;
     private String currentStatement = "";
+    private boolean lastCharacterWasWord = false;
     private Set<String> naryStatements = Set.of("pushif", "prependif", "each", "eachelse", "eachwithindex", "eachwithindexelse", "props");
 
     private char flipBracket(char bracket){
@@ -38,27 +39,33 @@ import java.util.Set;
             default: return bracket;
         }
     }
+
+    private void checkLastChar(){
+      char chr = yycharat(yylength() - 1);
+
+      lastCharacterWasWord = (chr >= 'a' && chr <= 'z') || (chr >= 'A' && chr <= 'Z') || (chr >= '0' && chr <= '9') || chr == '_';
+    }
 %}
 
 RBLADE_END_STATEMENT=end[_A-Za-z]*[\?!]?
-RBLADE_STATEMENT_LITERAL={RBLADE_END_STATEMENT}|blank\?|break|case|checked|class|defined\?|delete|disabled|else|elsif|each|each_?else|each_?with_?index|each_?with_?index_?else|empty|empty\?|env|for|for_?else|if|method|next|nil\?|old|once|patch|prepend|prepend_?if|prepend_?once|present\?|production|props|push|push_?if|push_?once|put|read_?only|required|ruby|selected|should_?render|stack|style|unless|until|when|while
+RBLADE_STATEMENT_LITERAL={RBLADE_END_STATEMENT}|blank\?|break|case|checked|class|defined\?|delete|disabled|else|elsif|each|each_?else|each_?with_?index|each_?with_?index_?else|empty|empty\?|env|for|for_?else|if|method|next|nil\?|old|once|patch|prepend|prepend_?if|prepend_?once|present\?|production|props|push|push_?if|push_?once|put|read_?only|required|selected|should_?render|stack|style|unless|until|when|while
 
-BEGIN_RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}[ \t]*\(
-
+BEGIN_RBLADE_STATEMENT=\@(ruby|{RBLADE_STATEMENT_LITERAL})[ \t]*\(
 RBLADE_STATEMENT=\@{RBLADE_STATEMENT_LITERAL}
 
-ESCAPE_SEQUENCES=\<%%|\@\{\{|\@\{\!\!|\@{RBLADE_STATEMENT}
+ESCAPED_RBLADE=\<%%|\@\{\{|\@\{\!\!|\@{RBLADE_STATEMENT}|\@\@ruby
 
 RBLADE_COMMENT=\{\{--~(--\}\})|<%#~(%>)
 
 RUBY_BLOCK_END=\}\}|%>|\!\!\}|\@end_?ruby|\)
 
-BLADE_START_CHARACTER=<|@|\{
-NON_RBLADE_CHARACTER=[^@<{]
-NON_RBLADE_STRING={NON_RBLADE_CHARACTER}+
+RBLADE_START_CHARACTER=[<@{]
+NON_RBLADE_START_CHARACTER=[^{RBLADE_START_CHARACTER}]
 
 START_BLOCK=[{\[(|]
 END_BLOCK=[}\])]
+
+PERCENT_STRING_DELIMITER=[\x00-\x7F&&[^a-zA-Z0-9]]
 
 // Verbatim to prevent other rules affecting the contents of verbatim blocks
 %xstate STATE_VERBATIM
@@ -67,12 +74,14 @@ END_BLOCK=[}\])]
 %state STATE_RUBY_BLOCK_END
 %state STATE_STRING_LITERAL
 %state STATE_STRING_LITERAL_INTERPOLATION
-%state STATE_REGEX_LITERAL
 
 %%
 
 // RBlade verbatims and comments should take the highest priority so extend the matching text to the end of the file
 \@verbatim/~(\@end_?verbatim)[^]* {
+  if (lastCharacterWasWord) {
+      return RBladeTypes.HTML_TEMPLATE;
+  }
   yybegin(STATE_VERBATIM);
   return RBladeTypes.RBLADE_STATEMENT;
 }
@@ -82,44 +91,73 @@ END_BLOCK=[}\])]
 }
 
 <YYINITIAL> {
-    {ESCAPE_SEQUENCES}/[^]* {
+    {ESCAPED_RBLADE}/[^]* {
+      checkLastChar();
       return RBladeTypes.HTML_TEMPLATE;
     }
     \{\{/~(\}\}) {
+      lastCharacterWasWord = false;
       yybegin(RBLADE_PRINT);
       return RBladeTypes.RBLADE_STATEMENT;
     }
     \{\!\!/~(\!\!\}) {
+      lastCharacterWasWord = false;
       yybegin(RBLADE_UNSAFE_PRINT);
       return RBladeTypes.RBLADE_STATEMENT;
     }
-    \@ruby/!([a-zA-Z0-9])~(\@end_?ruby) {
+    \@ruby/\s~([^a-zA-Z0-9_]\@end_?ruby) {
+      if (lastCharacterWasWord) {
+        return RBladeTypes.HTML_TEMPLATE;
+      }
+      lastCharacterWasWord = true;
       yybegin(RBLADE_RUBY);
       return RBladeTypes.RBLADE_STATEMENT;
     }
     \<%=?=?/~(%\>) {
+      lastCharacterWasWord = false;
       yybegin(ERB_STATEMENT);
       return RBladeTypes.RBLADE_STATEMENT;
     }
 
-    {BEGIN_RBLADE_STATEMENT}            {
-                                            stateStack.addFirst(STATE_RUBY_BLOCK_END);
-                                            rubyBlockEndDelimiter = ")";
-                                            yybegin(STATE_RUBY_BLOCK);
-                                            currentStatement = yytext().toString().replaceAll("[^a-zA-Z]", "").toLowerCase();
+    {BEGIN_RBLADE_STATEMENT} {
+      if (lastCharacterWasWord) {
+        lastCharacterWasWord = false;
+        return RBladeTypes.HTML_TEMPLATE;
+      }
+      lastCharacterWasWord = false;
 
-                                            return RBladeTypes.RBLADE_STATEMENT;
-                                            }
-    {RBLADE_STATEMENT}                  { return RBladeTypes.RBLADE_STATEMENT; }
+      stateStack.addFirst(STATE_RUBY_BLOCK_END);
+      rubyBlockEndDelimiter = ")";
+      yybegin(STATE_RUBY_BLOCK);
+      currentStatement = yytext().toString().replaceAll("[^a-zA-Z]", "").toLowerCase();
 
-    {BLADE_START_CHARACTER}             { return RBladeTypes.HTML_TEMPLATE; }
-    {NON_RBLADE_STRING}                 { return RBladeTypes.HTML_TEMPLATE; }
-    [a-zA-Z0-9_]                        { return RBladeTypes.HTML_TEMPLATE; }
-    [^]                                 { return RBladeTypes.HTML_TEMPLATE; }
+      return RBladeTypes.RBLADE_STATEMENT;
+    }
+    {RBLADE_STATEMENT} {
+      if (lastCharacterWasWord) {
+          return RBladeTypes.HTML_TEMPLATE;
+      }
+      checkLastChar();
+
+      return RBladeTypes.RBLADE_STATEMENT;
+    }
+    {RBLADE_STATEMENT}[a-zA-Z0-9_\?\!] {
+      checkLastChar();
+      return RBladeTypes.HTML_TEMPLATE;
+    }
+    {NON_RBLADE_START_CHARACTER}+ {
+      checkLastChar();
+      return RBladeTypes.HTML_TEMPLATE;
+    }
+    {RBLADE_START_CHARACTER} {
+      lastCharacterWasWord = false;
+      return RBladeTypes.HTML_TEMPLATE;
+    }
 }
 
 <RBLADE_RUBY> {
   \@end_?ruby {
+    lastCharacterWasWord = true;
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
@@ -129,6 +167,7 @@ END_BLOCK=[}\])]
 }
 <RBLADE_PRINT> {
   \}\} {
+    lastCharacterWasWord = false;
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
@@ -138,6 +177,7 @@ END_BLOCK=[}\])]
 }
 <RBLADE_UNSAFE_PRINT> {
   \!\!\} {
+    lastCharacterWasWord = false;
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
@@ -147,6 +187,7 @@ END_BLOCK=[}\])]
 }
 <ERB_STATEMENT> {
   %> {
+    lastCharacterWasWord = false;
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
@@ -156,10 +197,17 @@ END_BLOCK=[}\])]
 }
 
 <STATE_VERBATIM> {
-  [^\@]+                                 {return RBladeTypes.HTML_TEMPLATE;}
-  \@end_?verbatim                        {yybegin(YYINITIAL); return RBladeTypes.RBLADE_STATEMENT;}
-  \@                                     {return RBladeTypes.HTML_TEMPLATE;}
-  [^]                                   {return TokenType.BAD_CHARACTER;}
+  [^\@]+ {
+    return RBladeTypes.HTML_TEMPLATE;
+  }
+  \@end_?verbatim {
+    lastCharacterWasWord = true;
+    yybegin(YYINITIAL);
+    return RBladeTypes.RBLADE_STATEMENT;
+  }
+  \@ {
+    return RBladeTypes.HTML_TEMPLATE;
+  }
 }
 
 <STATE_RUBY_BLOCK> {
@@ -212,21 +260,15 @@ END_BLOCK=[}\])]
 
                                             return RBladeTypes.RUBY_EXPRESSION;
                                         }
-    \/[^/]                              {
-                                            stateStack.addFirst(STATE_RUBY_BLOCK);
-                                            yypushback(1);
-                                            yybegin(STATE_REGEX_LITERAL);
-
-                                            return RBladeTypes.RUBY_EXPRESSION;
-                                        }
-    \"|\'|%[qQwWiIrsx]?.                {
+    \"|\'|%[qQwWiIrsx]?{PERCENT_STRING_DELIMITER} {
                                             stateStack.addFirst(STATE_RUBY_BLOCK);
                                             blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
-                                            stringIsInterpolated = yycharat(0) == '"' || yylength() == 2 || (yylength() == 3 && yytext().toString().substring(0, 2).equals("%Q"));
+                                            stringIsInterpolated = yycharat(0) == '"' || yylength() == 2 || (yylength() == 3 && (yycharat(1) == 'Q' || yycharat(1) == 'W' || yycharat(1) == 'I' || yycharat(1) == 'r' || yycharat(1) == 'x'));
                                             yybegin(STATE_STRING_LITERAL);
                                             return RBladeTypes.RUBY_EXPRESSION;
                                         }
-    [^\"\'%\[\](){}|@,\s\:/]+           { return RBladeTypes.RUBY_EXPRESSION; }
+    \?[^]                               { return RBladeTypes.RUBY_EXPRESSION; }
+    [^\"\'%\[\](){}|@,\s\:/?]+          { return RBladeTypes.RUBY_EXPRESSION; }
     [^]                                 { return RBladeTypes.RUBY_EXPRESSION; }
 }
 <STATE_RUBY_BLOCK_END> {
@@ -260,31 +302,14 @@ END_BLOCK=[}\])]
 <STATE_STRING_LITERAL_INTERPOLATION> {
     \}                                  { yybegin(stateStack.removeFirst()); return RBladeTypes.RUBY_EXPRESSION; }
     \{                                  { stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION); return RBladeTypes.RUBY_EXPRESSION; }
-    \"|\'|%[qQwWiIrsx]?.                {
+    \"|\'|%[qQwWiIrsx]?{PERCENT_STRING_DELIMITER} {
                                           stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
                                           blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
                                           yybegin(STATE_STRING_LITERAL);
 
                                           return RBladeTypes.RUBY_EXPRESSION;
                                         }
-    \/[^/]                              {
-                                            yypushback(1);
-                                            stateStack.addFirst(STATE_STRING_LITERAL_INTERPOLATION);
-                                            yybegin(STATE_REGEX_LITERAL);
-
-                                            return RBladeTypes.RUBY_EXPRESSION;
-                                        }
     [^\}\{\"\'%/]+                      { return RBladeTypes.RUBY_EXPRESSION; }
-    [^]                                 { return RBladeTypes.RUBY_EXPRESSION; }
-}
-
-<STATE_REGEX_LITERAL> {
-    \\[^]                               { return RBladeTypes.RUBY_EXPRESSION; }
-    \/                                  {
-                                            yybegin(stateStack.removeFirst());
-
-                                            return RBladeTypes.RUBY_EXPRESSION;
-                                        }
     [^]                                 { return RBladeTypes.RUBY_EXPRESSION; }
 }
 

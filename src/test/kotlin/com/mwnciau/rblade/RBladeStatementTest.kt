@@ -107,10 +107,13 @@ class RBladeStatementTest : RBladeTest() {
 
   @Test
   fun testBoundaries() {
-    assertLexesTo("@ifhi@endIf", "@ifhi@endIf")
-    assertLexesTo("@if hi@endIf", "@if hi@endIf")
-    assertLexesTo("@ifhi @endIf", "@ifhi @endIf")
-    assertLexesTo("hi@if @endIf", "hi@if @endIf")
+    assertLexesTo("@ifhi", "@ifhi")
+    assertLexesTo("hi@if", "hi@if")
+    assertLexesTo(" @if", " ", "RBLADE:@if")
+    assertLexesTo(">@if", ">", "RBLADE:@if")
+    assertLexesTo(".@if", ".", "RBLADE:@if")
+    assertLexesTo(")@if", ")", "RBLADE:@if")
+    assertLexesTo("{{ }}@if", "RBLADE:{{", "RB: ", "RBLADE:}}", "RBLADE:@if")
 
     assertLexesTo("@end@end", "RBLADE:@end", "@end")
 
