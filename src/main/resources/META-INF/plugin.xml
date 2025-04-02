@@ -19,8 +19,9 @@
         <![CDATA[
             <h2>1.1.4 changes</h2>
             <ul>
+                <li>Rewrite flex lexer definition to more closely match RBlade</li>
                 <li>Fix lexing of content after a verbatim statement</li>
-                <li>Add more extensive testing of lexer to match RBlade plugin</li>
+                <li>Add more extensive testing of lexer</li>
             </ul>
         ]]>
     </change-notes>
