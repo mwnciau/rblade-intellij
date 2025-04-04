@@ -17,11 +17,9 @@
 
     <change-notes>
         <![CDATA[
-            <h2>1.1.4 changes</h2>
+            <h2>1.2.0 changes</h2>
             <ul>
-                <li>Rewrite flex lexer definition to more closely match RBlade</li>
-                <li>Fix lexing of content after a verbatim statement</li>
-                <li>Add more extensive testing of lexer</li>
+                <li>Add syntax highlighting of ruby code in RBlade component attributes</li>
             </ul>
         ]]>
     </change-notes>
@@ -66,6 +64,8 @@
             implementationClass="com.mwnciau.rblade.inspections.RubyInspectionSuppressor"/>
         <liveTemplateContext contextId="RBlade" implementation="com.mwnciau.rblade.RBladeLiveTemplateContextType" />
         <internalFileTemplate name="RBlade File"/>
+
+        <multiHostInjector implementation="com.mwnciau.rblade.html.RBladeMultiHostInjector" order="first"/>
     </extensions>
     <extensions defaultExtensionNs="org.jetbrains.plugins.ruby">
         <templates.integration implementation="com.mwnciau.rblade.RubyRBladeIntegrationImpl" />
