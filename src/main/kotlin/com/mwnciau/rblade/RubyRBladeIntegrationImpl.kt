@@ -43,12 +43,7 @@ class RubyRBladeIntegrationImpl : TemplateIntegration {
     anchor: PsiElement?,
     before: Boolean
   ): PsiElement? {
-    val psiFile = viewProvider.getPsi(RBladeLanguage.INSTANCE)
-    return if (before) {
-      null
-    } else {
-      null
-    }
+    return null
   }
 
   override fun getFileType(lang: TemplateIntegrationUtils.TemplateLang): FileType? {

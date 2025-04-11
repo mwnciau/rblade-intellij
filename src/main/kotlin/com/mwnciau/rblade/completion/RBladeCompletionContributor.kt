@@ -12,10 +12,5 @@ class RBladeCompletionContributor : CompletionContributor() {
       PlatformPatterns.psiElement(RBladeTypes.RBLADE_STATEMENT),
       RBladeStatementCompletionProvider()
     )
-    this.extend(
-      CompletionType.BASIC,
-      PlatformPatterns.psiElement(RBladeTypes.RUBY_EXPRESSION),
-      RBladeRubyCompletionProvider()
-    )
   }
 }

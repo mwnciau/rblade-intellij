@@ -19,6 +19,7 @@ import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.ILightStubFileElementType
 import com.mwnciau.rblade.psi.RBladeElementTypes
+import com.mwnciau.rblade.psi.RBladeFile
 import com.mwnciau.rblade.psi.impl.RBladeRubyFileImpl
 import com.mwnciau.rblade.ruby.RBladeRubyLanguage
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
@@ -65,7 +66,7 @@ class RBladeFileViewProvider(
   }
 
   override fun cloneInner(fileCopy: VirtualFile): MultiplePsiFilesPerDocumentFileViewProvider {
-    return RBladeFileViewProvider(manager, fileCopy, false);
+    return RBladeFileViewProvider(manager, fileCopy, false)
   }
 
   override fun createFile(lang: Language): PsiFile? {
@@ -97,6 +98,10 @@ class RBladeFileViewProvider(
     return this.getPsi(RubyLanguage.INSTANCE) as PsiFile
   }
 
+  fun getRBladeFile(): RBladeFile {
+    return this.getPsi(RBladeLanguage.INSTANCE) as RBladeFile
+  }
+
   private fun computeTemplateDataLanguage(): Language {
     var name = virtualFile.name
     if (name.endsWith(".rblade")) {
@@ -114,7 +119,7 @@ class RBladeFileViewProvider(
         return templateLanguage
       }
 
-      LOG.warn("No parser definition found for [$templateLanguage], in file $name falling back to plain text");
+      LOG.warn("No parser definition found for [$templateLanguage], in file $name falling back to plain text")
 
       return PlainTextLanguage.INSTANCE
     }
@@ -125,7 +130,7 @@ class RBladeFileViewProvider(
   private fun getLanguageByExtension(ext: String): Language {
     val fileType = FileTypeManager.getInstance().getFileTypeByExtension(ext)
     if (fileType !is LanguageFileType) {
-      return HTMLLanguage.INSTANCE;
+      return HTMLLanguage.INSTANCE
     }
 
     val language = fileType.language

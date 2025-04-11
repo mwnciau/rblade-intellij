@@ -13,7 +13,7 @@ import com.mwnciau.rblade.RBladeLanguage
 
 class HtmlInspectionSuppressor: InspectionSuppressor {
   companion object {
-    val SUPPRESSED_INSPECTIONS = listOf(CheckEmptyTagInspection().id, HtmlUnknownTagInspection().id, XmlUnboundNsPrefixInspection().id, RequiredAttributesInspection().id);
+    val SUPPRESSED_INSPECTIONS = listOf(CheckEmptyTagInspection().id, HtmlUnknownTagInspection().id, XmlUnboundNsPrefixInspection().id, RequiredAttributesInspection().id)
   }
 
   override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {

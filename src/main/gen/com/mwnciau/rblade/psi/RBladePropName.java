@@ -5,9 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface RBladeStatementParameters extends PsiElement {
-
-  @Nullable
-  RBladeProps getProps();
+public interface RBladePropName extends PsiElement {
 
 }

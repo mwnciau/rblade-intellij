@@ -17,14 +17,14 @@ import org.jetbrains.plugins.ruby.ruby.sdk.LanguageLevel
 
 class RubyCodeInRBladeType(debugName: String) : RubyInTemplateElementType(debugName) {
   override fun createLexer(lazyParsableElement: ASTNode?): Lexer {
-    return RBladeRubyLexer(false, 0);
+    return RBladeRubyLexer(false, 0)
   }
 
   private fun findOuterElementTextBefore(element: ASTNode): String? {
     var currentElement = element
     while (currentElement != null) {
       if (currentElement is RBladeOuterLanguageElement) {
-        return currentElement.getText()
+        return currentElement.text
       }
 
       currentElement = if (currentElement.treePrev != null) {

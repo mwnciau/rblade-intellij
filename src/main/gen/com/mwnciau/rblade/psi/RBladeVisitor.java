@@ -7,6 +7,14 @@ import com.intellij.psi.PsiElement;
 
 public class RBladeVisitor extends PsiElementVisitor {
 
+  public void visitPropName(@NotNull RBladePropName o) {
+    visitPsiElement(o);
+  }
+
+  public void visitProps(@NotNull RBladeProps o) {
+    visitPsiElement(o);
+  }
+
   public void visitStatement(@NotNull RBladeStatement o) {
     visitPsiElement(o);
   }

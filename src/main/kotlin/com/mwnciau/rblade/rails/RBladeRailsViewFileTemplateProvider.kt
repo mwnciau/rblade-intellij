@@ -16,7 +16,7 @@ class RBladeRailsViewFileTemplateProvider : RailsViewFileTemplateProvider {
     if (FileTypeIndex.containsFileOfType(RBladeFileType.INSTANCE, GlobalSearchScope.projectScope(project))) {
       val presentation = CreateWithTemplatesDialogPanel.TemplatePresentation(
         "RBlade",
-        RBladeFileType.INSTANCE.getIcon(),
+        RBladeFileType.INSTANCE.icon,
         "RBlade File",
       )
 

@@ -8,7 +8,7 @@ import com.mwnciau.rblade.psi.RBladeFile
 
 class RBladeLiveTemplateContextType : TemplateContextType("RBlade") {
   override fun isInContext(templateActionContext: TemplateActionContext): Boolean {
-    return templateActionContext.getFile() is RBladeFile
+    return templateActionContext.file is RBladeFile
   }
 
   override fun createHighlighter(): SyntaxHighlighter? {

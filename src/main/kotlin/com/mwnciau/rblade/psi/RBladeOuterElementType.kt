@@ -13,6 +13,6 @@ open class RBladeOuterElementType @JvmOverloads constructor(debugName: String, p
   }
 
   override fun createLeafNode(charSequence: CharSequence): ASTNode {
-    return RBladeOuterLanguageElementImpl(this, charSequence);
+    return RBladeOuterLanguageElementImpl(this, charSequence)
   }
 }

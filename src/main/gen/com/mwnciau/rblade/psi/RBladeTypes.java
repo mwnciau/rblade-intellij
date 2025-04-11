@@ -8,6 +8,8 @@ import com.mwnciau.rblade.psi.impl.*;
 
 public interface RBladeTypes {
 
+  IElementType PROPS = RBladeTypesFactory.createElement("PROPS");
+  IElementType PROP_NAME = RBladeTypesFactory.createElement("PROP_NAME");
   IElementType STATEMENT = RBladeTypesFactory.createElement("STATEMENT");
   IElementType STATEMENT_PARAMETERS = RBladeTypesFactory.createElement("STATEMENT_PARAMETERS");
 
@@ -18,13 +20,19 @@ public interface RBladeTypes {
   IElementType RBLADE_STATEMENT = RBladeTypesFactory.createToken("RBLADE_STATEMENT");
   IElementType RBLADE_STATEMENT_COMMA = RBladeTypesFactory.createToken("RBLADE_STATEMENT_COMMA");
   IElementType RBLADE_STATEMENT_EACH_IN = RBladeTypesFactory.createToken("RBLADE_STATEMENT_EACH_IN");
-  IElementType RBLADE_STATEMENT_PROPS_COLON = RBladeTypesFactory.createToken("RBLADE_STATEMENT_PROPS_COLON");
+  IElementType RBLADE_STATEMENT_PROPS_NAME = RBladeTypesFactory.createToken("RBLADE_STATEMENT_PROPS_NAME");
   IElementType RUBY_EXPRESSION = RBladeTypesFactory.createToken("RUBY_EXPRESSION");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == STATEMENT) {
+      if (type == PROPS) {
+        return new RBladePropsImpl(node);
+      }
+      else if (type == PROP_NAME) {
+        return new RBladePropNameImpl(node);
+      }
+      else if (type == STATEMENT) {
         return new RBladeStatementImpl(node);
       }
       else if (type == STATEMENT_PARAMETERS) {

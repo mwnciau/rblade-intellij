@@ -1,8 +1,8 @@
 package com.mwnciau.rblade.psi.impl
 
-import com.mwnciau.rblade.psi.RBladeElementTypes
 import com.intellij.psi.FileViewProvider
 import com.mwnciau.rblade.RBladeFileViewProvider
+import com.mwnciau.rblade.psi.RBladeElementTypes
 import com.mwnciau.rblade.psi.RBladeRubyFile
 import org.jetbrains.plugins.ruby.ruby.lang.psi.impl.RPsiFileBase
 import org.jetbrains.plugins.ruby.utils.VirtualFileUtil
@@ -24,6 +24,6 @@ class RBladeRubyFileImpl(viewProvider: FileViewProvider) :
   }
 
   override fun getPresentableLocation(): String? {
-    return VirtualFileUtil.getRelativePath(virtualFile, project);
+    return VirtualFileUtil.getRelativePath(virtualFile, project)
   }
 }

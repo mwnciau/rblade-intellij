@@ -21,12 +21,10 @@ import java.util.Set;
 %eof}
 
 %{
-    private int parentheses;
-    private ArrayDeque<Integer> stateStack = new ArrayDeque<Integer>();
-    private ArrayDeque<Character> blockStack = new ArrayDeque<Character>();
-    private boolean stringIsInterpolated;
-    private String currentStatement = "";
-    private boolean lastCharacterWasWord = false;
+    private ArrayDeque<Integer> stateStack;
+    private ArrayDeque<Character> blockStack;
+    private String currentStatement;
+    private boolean lastCharacterWasWord;
     private Set<String> naryStatements = Set.of("pushif", "prependif", "each", "eachelse", "eachwithindex", "eachwithindexelse", "props");
 
     private char flipBracket(char bracket){
@@ -45,6 +43,13 @@ import java.util.Set;
       lastCharacterWasWord = (chr >= 'a' && chr <= 'z') || (chr >= 'A' && chr <= 'Z') || (chr >= '0' && chr <= '9') || chr == '_';
     }
 %}
+
+%init{
+  stateStack = new ArrayDeque<Integer>();
+  blockStack = new ArrayDeque<Character>();
+  currentStatement = "";
+  lastCharacterWasWord = false;
+%init}
 
 RBLADE_END_STATEMENT=end[_A-Za-z]*[\?!]?
 RBLADE_STATEMENT_LITERAL={RBLADE_END_STATEMENT}|blank\?|break|case|checked|class|defined\?|delete|disabled|else|elsif|each|each_?else|each_?with_?index|each_?with_?index_?else|empty|empty\?|env|for|for_?else|if|method|next|nil\?|old|once|patch|prepend|prepend_?if|prepend_?once|present\?|production|props|push|push_?if|push_?once|put|read_?only|required|selected|should_?render|stack|style|unless|until|when|while
@@ -65,14 +70,13 @@ STRING_START_CHARACTERS=[\"'%?]
 // Verbatim to prevent other rules affecting the contents of verbatim blocks
 %xstate STATE_VERBATIM
 %states RBLADE_RUBY RBLADE_PRINT RBLADE_UNSAFE_PRINT ERB_STATEMENT
-%state STATE_RUBY_BLOCK
+%states STATE_RUBY_BLOCK STATE_PROPS_STATEMENT_NAME STATE_PROPS_STATEMENT_COLON STATE_PROPS_STATEMENT_VALUE
 %states STATE_STRING_LITERAL STATE_STRING_INTERPOLATED_LITERAL STATE_STRING_INTERPOLATION
 %states MATCHED_PARENTHESES MATCHED_BRACKETS MATCHED_BRACES
 
 %%
 
-// RBlade verbatims and comments should take the highest priority so extend the matching text to the end of the file
-\@verbatim/[^a-zA-Z0-9_]~([^a-zA-Z0-9_]\@end_?verbatim) {
+\@verbatim {
   if (lastCharacterWasWord) {
       return RBladeTypes.HTML_TEMPLATE;
   }
@@ -80,6 +84,11 @@ STRING_START_CHARACTERS=[\"'%?]
   stateStack.addFirst(yystate());
   yybegin(STATE_VERBATIM);
   return RBladeTypes.RBLADE_STATEMENT;
+}
+\@verbatim[a-zA-Z0-9_] {
+  lastCharacterWasWord = true;
+
+  return stateStack.isEmpty() ? RBladeTypes.HTML_TEMPLATE : RBladeTypes.RUBY_EXPRESSION;
 }
 
 {RBLADE_COMMENT} {
@@ -91,12 +100,12 @@ STRING_START_CHARACTERS=[\"'%?]
       checkLastChar();
       return RBladeTypes.HTML_TEMPLATE;
     }
-    \{\{/~(\}\}) {
+    \{\{ {
       lastCharacterWasWord = false;
       yybegin(RBLADE_PRINT);
       return RBladeTypes.RBLADE_STATEMENT;
     }
-    \{\!\!/~(\!\!\}) {
+    \{\!\! {
       lastCharacterWasWord = false;
       yybegin(RBLADE_UNSAFE_PRINT);
       return RBladeTypes.RBLADE_STATEMENT;
@@ -109,12 +118,22 @@ STRING_START_CHARACTERS=[\"'%?]
       yybegin(RBLADE_RUBY);
       return RBladeTypes.RBLADE_STATEMENT;
     }
-    \<%=?=?/~(%\>) {
+    \<%=?=? {
       lastCharacterWasWord = false;
       yybegin(ERB_STATEMENT);
       return RBladeTypes.RBLADE_STATEMENT;
     }
+    \@props[ \t]*\( {
+      if (lastCharacterWasWord) {
+        lastCharacterWasWord = false;
+        return RBladeTypes.HTML_TEMPLATE;
+      }
+      lastCharacterWasWord = false;
 
+      yybegin(STATE_PROPS_STATEMENT_NAME);
+
+      return RBladeTypes.RBLADE_STATEMENT;
+    }
     {BEGIN_RBLADE_STATEMENT} {
       if (lastCharacterWasWord) {
         lastCharacterWasWord = false;
@@ -122,8 +141,8 @@ STRING_START_CHARACTERS=[\"'%?]
       }
       lastCharacterWasWord = false;
 
-      yybegin(STATE_RUBY_BLOCK);
       currentStatement = yytext().toString().replaceAll("[^a-zA-Z]", "").toLowerCase();
+      yybegin(STATE_RUBY_BLOCK);
 
       return RBladeTypes.RBLADE_STATEMENT;
     }
@@ -156,7 +175,10 @@ STRING_START_CHARACTERS=[\"'%?]
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
-  [^] {
+  [^\@]+ {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+  \@ {
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
@@ -166,7 +188,10 @@ STRING_START_CHARACTERS=[\"'%?]
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
-  [^] {
+  [^\@}]+ {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+  [\@}] {
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
@@ -176,7 +201,10 @@ STRING_START_CHARACTERS=[\"'%?]
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
-  [^] {
+  [^\@!]+ {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+  [\@\!] {
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
@@ -186,16 +214,15 @@ STRING_START_CHARACTERS=[\"'%?]
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
-  [^] {
+  [^\@%]+ {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+  [%\@] {
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
 
 <STATE_VERBATIM> {
-  [^\@]+ {
-    checkLastChar();
-    return stateStack.getFirst() == YYINITIAL ? RBladeTypes.HTML_TEMPLATE : RBladeTypes.RUBY_EXPRESSION;
-  }
   \@end_?verbatim {
     if (lastCharacterWasWord) {
       return stateStack.getFirst() == YYINITIAL ? RBladeTypes.HTML_TEMPLATE : RBladeTypes.RUBY_EXPRESSION;
@@ -208,13 +235,17 @@ STRING_START_CHARACTERS=[\"'%?]
     lastCharacterWasWord = true;
     return stateStack.getFirst() == YYINITIAL ? RBladeTypes.HTML_TEMPLATE : RBladeTypes.RUBY_EXPRESSION;
   }
+  [^\@]+ {
+    checkLastChar();
+    return stateStack.getFirst() == YYINITIAL ? RBladeTypes.HTML_TEMPLATE : RBladeTypes.RUBY_EXPRESSION;
+  }
   \@ {
     lastCharacterWasWord = false;
     return stateStack.getFirst() == YYINITIAL ? RBladeTypes.HTML_TEMPLATE : RBladeTypes.RUBY_EXPRESSION;
   }
 }
 
-<STATE_RUBY_BLOCK, MATCHED_BRACES, MATCHED_BRACKETS, MATCHED_PARENTHESES, STATE_STRING_INTERPOLATION> {
+<STATE_RUBY_BLOCK, MATCHED_BRACES, MATCHED_BRACKETS, MATCHED_PARENTHESES, STATE_STRING_INTERPOLATION, STATE_PROPS_STATEMENT_VALUE> {
   \"|%[QWIrx]?{PERCENT_STRING_DELIMITER} {
     stateStack.addFirst(yystate());
     blockStack.addFirst(flipBracket(yycharat(yylength() - 1)));
@@ -232,25 +263,38 @@ STRING_START_CHARACTERS=[\"'%?]
   }
 }
 
-<STATE_RUBY_BLOCK> {
+<STATE_RUBY_BLOCK, STATE_PROPS_STATEMENT_VALUE> {
   \) {
-    yybegin(YYINITIAL);
     currentStatement = "";
+    yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
   \( {
+    stateStack.addFirst(yystate());
     yybegin(MATCHED_PARENTHESES);
-    stateStack.addFirst(STATE_RUBY_BLOCK);
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \{ {
+    stateStack.addFirst(yystate());
     yybegin(MATCHED_BRACES);
-    stateStack.addFirst(STATE_RUBY_BLOCK);
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \[ {
+    stateStack.addFirst(yystate());
     yybegin(MATCHED_BRACKETS);
-    stateStack.addFirst(STATE_RUBY_BLOCK);
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+  \?[^] {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+}
+
+<STATE_RUBY_BLOCK> {
+  \s+in\s+ {
+    if (currentStatement.startsWith("each")) {
+      return RBladeTypes.RBLADE_STATEMENT_EACH_IN;
+    }
+
     return RBladeTypes.RUBY_EXPRESSION;
   }
   , {
@@ -260,27 +304,42 @@ STRING_START_CHARACTERS=[\"'%?]
       return RBladeTypes.RUBY_EXPRESSION;
     }
   }
-  \: {
-    if (blockStack.isEmpty() && currentStatement.equals("props")) {
-      return RBladeTypes.RBLADE_STATEMENT_PROPS_COLON;
-    }
+  [^{STRING_START_CHARACTERS}\[(){,\s]+ {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+  [^\[(){] {
+    return RBladeTypes.RUBY_EXPRESSION;
+  }
+}
 
+<STATE_PROPS_STATEMENT_NAME> {
+  \) {
+    yybegin(YYINITIAL);
+    return RBladeTypes.RBLADE_STATEMENT;
+  }
+  [a-zA-Z_][a-zA-Z0-9_]*/\s*: {
+    yybegin(STATE_PROPS_STATEMENT_COLON);
+    return RBladeTypes.RBLADE_STATEMENT_PROPS_NAME;
+  }
+  \s+ {
+    return RBladeTypes.RBLADE_STATEMENT;
+  }
+}
+<STATE_PROPS_STATEMENT_COLON> {
+  \s*:\s* {
+    yybegin(STATE_PROPS_STATEMENT_VALUE);
+    return RBladeTypes.RBLADE_STATEMENT;
+  }
+}
+<STATE_PROPS_STATEMENT_VALUE> {
+  [^{STRING_START_CHARACTERS}\[(){,]+ {
     return RBladeTypes.RUBY_EXPRESSION;
   }
-  \s+in\s+ {
-    if (currentStatement.startsWith("each")) {
-      return RBladeTypes.RBLADE_STATEMENT_EACH_IN;
-    }
-
-    return RBladeTypes.RUBY_EXPRESSION;
+  \s*,\s* {
+    yybegin(STATE_PROPS_STATEMENT_NAME);
+    return RBladeTypes.RBLADE_STATEMENT_COMMA;
   }
-  \?[^] {
-    return RBladeTypes.RUBY_EXPRESSION;
-  }
-  [^@{STRING_START_CHARACTERS}\[(){@,\s\:]+ {
-    return RBladeTypes.RUBY_EXPRESSION;
-  }
-  [^] {
+  [^\[(){] {
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }

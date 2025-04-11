@@ -15,7 +15,7 @@ import org.jetbrains.plugins.ruby.ruby.inspections.resolve.RubyResolveInspection
 
 class RubyInspectionSuppressor: InspectionSuppressor {
   companion object {
-    val SUPPRESSED_INSPECTIONS = listOf(RubyResolveInspection().id);
+    val SUPPRESSED_INSPECTIONS = listOf(RubyResolveInspection().id)
   }
 
   override fun isSuppressedFor(element: PsiElement, toolId: String): Boolean {

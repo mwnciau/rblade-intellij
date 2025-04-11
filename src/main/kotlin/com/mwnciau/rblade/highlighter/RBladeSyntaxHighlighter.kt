@@ -44,7 +44,7 @@ class RBladeSyntaxHighlighter : SyntaxHighlighterBase(), SyntaxHighlighter {
             RBladeTypes.RBLADE_STATEMENT -> STATEMENT_KEYS
             RBladeTypes.RBLADE_STATEMENT_COMMA -> SEPARATOR_KEYS
             RBladeTypes.RBLADE_STATEMENT_EACH_IN -> KEYWORD_KEYS
-            RBladeTypes.RBLADE_STATEMENT_PROPS_COLON -> SEPARATOR_KEYS
+            RBladeTypes.RBLADE_STATEMENT_PROPS_NAME -> KEYWORD_KEYS
             else -> EMPTY_KEYS
         }
     }

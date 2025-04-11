@@ -29,7 +29,7 @@ open class RBladeTest {
       "RBLADE_STATEMENT_COMMA" -> "COMMA:"
       "HTML_TEMPLATE" -> ""
       "RBLADE_STATEMENT_EACH_IN" -> ""
-      else -> tokenType.toString() + ""
+      else -> "$tokenType:"
     }
   }
 

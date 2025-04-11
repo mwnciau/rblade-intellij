@@ -26,7 +26,7 @@ class RBladeVerbatimTest : RBladeTest() {
   @Test
   fun testBoundaries() {
     assertLexesTo("@verbatimhi@endVerbatim", "@verbatimhi@endVerbatim")
-    assertLexesTo("@verbatim hi@endVerbatim", "@verbatim hi@endVerbatim")
+    assertLexesTo("@verbatim hi@endVerbatim", "RBLADE:@verbatim", " hi@endVerbatim")
     assertLexesTo("@verbatimhi @endVerbatim", "@verbatimhi ", "RBLADE:@endVerbatim")
     assertLexesTo("hi@verbatim @endVerbatim", "hi@verbatim ", "RBLADE:@endVerbatim")
 

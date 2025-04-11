@@ -47,6 +47,55 @@ public class RBladeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // RBLADE_STATEMENT_PROPS_NAME
+  public static boolean propName(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "propName")) return false;
+    if (!nextTokenIs(b, RBLADE_STATEMENT_PROPS_NAME)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, RBLADE_STATEMENT_PROPS_NAME);
+    exit_section_(b, m, PROP_NAME, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // propName RBLADE_STATEMENT RUBY_EXPRESSION (RBLADE_STATEMENT_COMMA propName RBLADE_STATEMENT RUBY_EXPRESSION)*
+  public static boolean props(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "props")) return false;
+    if (!nextTokenIs(b, RBLADE_STATEMENT_PROPS_NAME)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = propName(b, l + 1);
+    r = r && consumeTokens(b, 0, RBLADE_STATEMENT, RUBY_EXPRESSION);
+    r = r && props_3(b, l + 1);
+    exit_section_(b, m, PROPS, r);
+    return r;
+  }
+
+  // (RBLADE_STATEMENT_COMMA propName RBLADE_STATEMENT RUBY_EXPRESSION)*
+  private static boolean props_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "props_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!props_3_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "props_3", c)) break;
+    }
+    return true;
+  }
+
+  // RBLADE_STATEMENT_COMMA propName RBLADE_STATEMENT RUBY_EXPRESSION
+  private static boolean props_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "props_3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, RBLADE_STATEMENT_COMMA);
+    r = r && propName(b, l + 1);
+    r = r && consumeTokens(b, 0, RBLADE_STATEMENT, RUBY_EXPRESSION);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // item_*
   static boolean rbladeFile(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "rbladeFile")) return false;
@@ -90,28 +139,38 @@ public class RBladeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (RUBY_EXPRESSION|RBLADE_STATEMENT_COMMA|RBLADE_STATEMENT_PROPS_COLON|RBLADE_STATEMENT_EACH_IN)+
+  // props | (RUBY_EXPRESSION | RBLADE_STATEMENT_COMMA | RBLADE_STATEMENT_EACH_IN)+
   public static boolean statement_parameters(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "statement_parameters")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, STATEMENT_PARAMETERS, "<statement parameters>");
-    r = statement_parameters_0(b, l + 1);
-    while (r) {
-      int c = current_position_(b);
-      if (!statement_parameters_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "statement_parameters", c)) break;
-    }
+    r = props(b, l + 1);
+    if (!r) r = statement_parameters_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // RUBY_EXPRESSION|RBLADE_STATEMENT_COMMA|RBLADE_STATEMENT_PROPS_COLON|RBLADE_STATEMENT_EACH_IN
-  private static boolean statement_parameters_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "statement_parameters_0")) return false;
+  // (RUBY_EXPRESSION | RBLADE_STATEMENT_COMMA | RBLADE_STATEMENT_EACH_IN)+
+  private static boolean statement_parameters_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "statement_parameters_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = statement_parameters_1_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!statement_parameters_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "statement_parameters_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // RUBY_EXPRESSION | RBLADE_STATEMENT_COMMA | RBLADE_STATEMENT_EACH_IN
+  private static boolean statement_parameters_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "statement_parameters_1_0")) return false;
     boolean r;
     r = consumeToken(b, RUBY_EXPRESSION);
     if (!r) r = consumeToken(b, RBLADE_STATEMENT_COMMA);
-    if (!r) r = consumeToken(b, RBLADE_STATEMENT_PROPS_COLON);
     if (!r) r = consumeToken(b, RBLADE_STATEMENT_EACH_IN);
     return r;
   }

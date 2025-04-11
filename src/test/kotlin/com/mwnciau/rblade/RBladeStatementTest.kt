@@ -5,12 +5,12 @@ import org.junit.Test
 class RBladeStatementTest : RBladeTest() {
   @Test
   fun testStatement() {
-    assertLexesTo("@props", "RBLADE:@props")
-    assertLexesTo("@props @if", "RBLADE:@props", " ", "RBLADE:@if")
-    assertLexesTo("@props()", "RBLADE:@props(", "RBLADE:)")
-    assertLexesTo("@props(1, 2, 3)", "RBLADE:@props(", "RB:1", "COMMA:,", "RB: 2", "COMMA:,", "RB: 3", "RBLADE:)")
-    assertLexesTo("@props   (1, 2, 3)", "RBLADE:@props   (", "RB:1", "COMMA:,", "RB: 2", "COMMA:,", "RB: 3", "RBLADE:)")
-    assertLexesTo("@props   (1,\n2,\n3)", "RBLADE:@props   (", "RB:1", "COMMA:,", "RB:\n2", "COMMA:,", "RB:\n3", "RBLADE:)")
+    assertLexesTo("@pushIf", "RBLADE:@pushIf")
+    assertLexesTo("@pushIf @if", "RBLADE:@pushIf", " ", "RBLADE:@if")
+    assertLexesTo("@pushIf()", "RBLADE:@pushIf(", "RBLADE:)")
+    assertLexesTo("@pushIf(1, 2, 3)", "RBLADE:@pushIf(", "RB:1", "COMMA:,", "RB: 2", "COMMA:,", "RB: 3", "RBLADE:)")
+    assertLexesTo("@pushIf   (1, 2, 3)", "RBLADE:@pushIf   (", "RB:1", "COMMA:,", "RB: 2", "COMMA:,", "RB: 3", "RBLADE:)")
+    assertLexesTo("@pushIf   (1,\n2,\n3)", "RBLADE:@pushIf   (", "RB:1", "COMMA:,", "RB:\n2", "COMMA:,", "RB:\n3", "RBLADE:)")
   }
 
   @Test
@@ -39,10 +39,10 @@ class RBladeStatementTest : RBladeTest() {
 
   @Test
   fun testNestedStatement() {
-    assertLexesTo("@props(@if)", "RBLADE:@props(", "RB:@if", "RBLADE:)")
-    assertLexesTo("@props( @if )", "RBLADE:@props(", "RB: @if ", "RBLADE:)")
-    assertLexesTo("@props( (@if) )", "RBLADE:@props(", "RB: (@if) ", "RBLADE:)")
-    assertLexesTo("@props( @if() )", "RBLADE:@props(", "RB: @if() ", "RBLADE:)")
+    assertLexesTo("@pushIf(@if)", "RBLADE:@pushIf(", "RB:@if", "RBLADE:)")
+    assertLexesTo("@pushIf( @if )", "RBLADE:@pushIf(", "RB: @if ", "RBLADE:)")
+    assertLexesTo("@pushIf( (@if) )", "RBLADE:@pushIf(", "RB: (@if) ", "RBLADE:)")
+    assertLexesTo("@pushIf( @if() )", "RBLADE:@pushIf(", "RB: @if() ", "RBLADE:)")
   }
 
   @Test
@@ -101,10 +101,10 @@ class RBladeStatementTest : RBladeTest() {
 
   @Test
   fun testCommasInBrackets() {
-    assertLexesTo("@props([1, 2, 3])", "RBLADE:@props(", "RB:[1, 2, 3]", "RBLADE:)")
-    assertLexesTo("@props([1, 2, 3], a)", "RBLADE:@props(", "RB:[1, 2, 3]", "COMMA:,", "RB: a", "RBLADE:)")
-    assertLexesTo("@props([1, {2, 3}])", "RBLADE:@props(", "RB:[1, {2, 3}]", "RBLADE:)")
-    assertLexesTo("@props([1], ([{2, 3}]))", "RBLADE:@props(", "RB:[1]", "COMMA:,", "RB: ([{2, 3}])", "RBLADE:)")
+    assertLexesTo("@pushIf([1, 2, 3])", "RBLADE:@pushIf(", "RB:[1, 2, 3]", "RBLADE:)")
+    assertLexesTo("@pushIf([1, 2, 3], a)", "RBLADE:@pushIf(", "RB:[1, 2, 3]", "COMMA:,", "RB: a", "RBLADE:)")
+    assertLexesTo("@pushIf([1, {2, 3}])", "RBLADE:@pushIf(", "RB:[1, {2, 3}]", "RBLADE:)")
+    assertLexesTo("@pushIf([1], ([{2, 3}]))", "RBLADE:@pushIf(", "RB:[1]", "COMMA:,", "RB: ([{2, 3}])", "RBLADE:)")
   }
 
   @Test

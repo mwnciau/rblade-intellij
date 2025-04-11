@@ -189,6 +189,17 @@ class RBladeInjectionTest : RBladeTest() {
   }
 
   @Test
+  fun testPartialTags() {
+    // While these don't get parsed by RBlade, it is useful to have them start Ruby in the IDE
+    assertLexesTo("{{ @if", "RBLADE:{{", "RB: @if")
+    assertLexesTo("{!! @if", "RBLADE:{!!", "RB: @if")
+    assertLexesTo("@verbatim @if", "RBLADE:@verbatim", " @if")
+    assertLexesTo("<% @if", "RBLADE:<%", "RB: @if")
+    assertLexesTo("<%= @if", "RBLADE:<%=", "RB: @if")
+    assertLexesTo("<%== @if", "RBLADE:<%==", "RB: @if")
+  }
+
+  @Test
   fun testEscapes() {
     assertLexesTo("@{{ 'foo' }}", "@{{ 'foo' }}")
     assertLexesTo("@{!! 'foo' !!}", "@{!! 'foo' !!}")
@@ -210,14 +221,6 @@ class RBladeInjectionTest : RBladeTest() {
     // Start tags should be unaffected
     assertLexesTo("{{ '{{' }}", "RBLADE:{{", "RB: '{{' ", "RBLADE:}}")
     assertLexesTo("<% '<%' %>", "RBLADE:<%", "RB: '<%' ", "RBLADE:%>")
-
-    // While problematic, RBlade will not parse the opening tag without the end tag
-    assertLexesTo("{{ @if", "{{ ", "RBLADE:@if")
-    assertLexesTo("{!! @if", "{!! ", "RBLADE:@if")
-    assertLexesTo("@verbatim @if", "@verbatim ", "RBLADE:@if")
-    assertLexesTo("<% @if", "<% ", "RBLADE:@if")
-    assertLexesTo("<%= @if", "<%= ", "RBLADE:@if")
-    assertLexesTo("<%== @if", "<%== ", "RBLADE:@if")
 
     // RBlade Ruby statements have stricter boundaries
     assertLexesTo("@ruby@endRuby", "@ruby@endRuby")

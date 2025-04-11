@@ -20,6 +20,7 @@
             <h2>1.2.0 changes</h2>
             <ul>
                 <li>Add syntax highlighting of ruby code in RBlade component attributes</li>
+                <li>Add attributes, slot and props attributes to Ruby local variables</li>
             </ul>
         ]]>
     </change-notes>
@@ -71,5 +72,6 @@
         <templates.integration implementation="com.mwnciau.rblade.RubyRBladeIntegrationImpl" />
         <rails.viewFileTypesProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTypesProvider"/>
         <rails.viewFileTemplateProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTemplateProvider"/>
+        <rubyLocalVariablesProvider implementation="com.mwnciau.rblade.ruby.RBladeRubyLocalVariablesProvider"/>
     </extensions>
 </idea-plugin>

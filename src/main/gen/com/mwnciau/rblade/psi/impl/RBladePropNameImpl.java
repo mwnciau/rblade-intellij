@@ -11,26 +11,20 @@ import static com.mwnciau.rblade.psi.RBladeTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.mwnciau.rblade.psi.*;
 
-public class RBladeStatementParametersImpl extends ASTWrapperPsiElement implements RBladeStatementParameters {
+public class RBladePropNameImpl extends ASTWrapperPsiElement implements RBladePropName {
 
-  public RBladeStatementParametersImpl(@NotNull ASTNode node) {
+  public RBladePropNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull RBladeVisitor visitor) {
-    visitor.visitStatementParameters(this);
+    visitor.visitPropName(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof RBladeVisitor) accept((RBladeVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public RBladeProps getProps() {
-    return findChildByClass(RBladeProps.class);
   }
 
 }
