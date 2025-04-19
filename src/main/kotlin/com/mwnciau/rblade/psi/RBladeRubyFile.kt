@@ -11,7 +11,7 @@ class RBladeRubyFile(viewProvider: FileViewProvider) :
   RFile
 {
   override fun getViewProvider(): RBladeFileViewProvider {
-    return super.getViewProvider() as RBladeFileViewProvider
+    return super.viewProvider as RBladeFileViewProvider
   }
 
   override fun toString(): String {

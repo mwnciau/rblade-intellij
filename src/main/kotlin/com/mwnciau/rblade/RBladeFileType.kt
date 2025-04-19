@@ -1,6 +1,5 @@
 package com.mwnciau.rblade
 
-import com.intellij.openapi.fileTypes.LanguageFileType
 import org.jetbrains.plugins.ruby.ruby.lang.AbstractRubyFileType
 import javax.swing.Icon
 

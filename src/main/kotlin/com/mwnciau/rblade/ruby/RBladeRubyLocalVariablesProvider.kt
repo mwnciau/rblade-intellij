@@ -73,7 +73,7 @@ class RBladeRubyLocalVariablesProvider : RubyLocalVariablesProvider {
     }
 
     override fun getTextRange() : TextRange {
-      return TextRange.create(textOffset, textOffset + textLength);
+      return TextRange.create(textOffset, textOffset + textLength)
     }
 
     override fun getText() : String {
@@ -109,7 +109,7 @@ class RBladeRubyLocalVariablesProvider : RubyLocalVariablesProvider {
     }
 
     override fun setName(newName: @NonNls String): PsiElement? {
-      if (!isReadWriteAccessible()) {
+      if (!isReadWriteAccessible) {
         return null
       }
 
@@ -132,12 +132,12 @@ class RBladeRubyLocalVariablesProvider : RubyLocalVariablesProvider {
     }
 
     override fun equals(other: Any?): Boolean {
-      if (this == other) {
-          return true;
+      return if (this == other) {
+        true
       } else if (other != null && other is RBladeFakePSIVariable) {
-          return parent.equals(other.parent) && name.equals(other.name) && textOffset == other.textOffset
+        parent == other.parent && name == other.name && textOffset == other.textOffset
       } else {
-          return false;
+        false
       }
     }
 
