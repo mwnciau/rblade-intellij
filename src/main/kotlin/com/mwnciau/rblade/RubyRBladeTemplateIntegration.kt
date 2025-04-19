@@ -15,7 +15,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.expressions.RExpression
 import org.jetbrains.plugins.ruby.templates.TemplateIntegration
 import org.jetbrains.plugins.ruby.templates.TemplateIntegrationUtils
 
-class RubyRBladeIntegrationImpl : TemplateIntegration {
+class RubyRBladeTemplateIntegration : TemplateIntegration {
   override fun getOuterElements(): MutableCollection<out IElementType> {
     return mutableListOf(RBladeTypes.RBLADE_INJECTION_IN_RUBY)
   }

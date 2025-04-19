@@ -1,6 +1,7 @@
 package com.mwnciau.rblade
 
 import com.intellij.lang.ASTNode
+import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiParser
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.project.Project
@@ -10,16 +11,15 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import com.mwnciau.rblade.parser.RBladeParser
+import com.mwnciau.rblade.psi.RBladeFile
 import com.mwnciau.rblade.psi.RBladeTokenSets
 import com.mwnciau.rblade.psi.RBladeTypes
-import com.mwnciau.rblade.psi.impl.RBladeFileImpl
-import org.jetbrains.plugins.ruby.ruby.lang.parser.RubyTemplateAwareParserDefinition
+import com.mwnciau.rblade.stubs.RBladeStubFileElementType
 
-class RBladeParserDefinition : RubyTemplateAwareParserDefinition {
+class RBladeParserDefinition : ParserDefinition {
     companion object {
-        val FILE = IFileElementType(RBladeLanguage.INSTANCE)
+        val FILE = RBladeStubFileElementType()
     }
-
     override fun createLexer(project: Project): Lexer {
         return RBladeMergingLexer()
     }
@@ -41,15 +41,11 @@ class RBladeParserDefinition : RubyTemplateAwareParserDefinition {
     }
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile {
-        return RBladeFileImpl(viewProvider)
+        return RBladeFile(viewProvider)
     }
 
     override fun createElement(node: ASTNode): PsiElement {
         return RBladeTypes.Factory.createElement(node)
-    }
-
-    override fun mayContainTemplateParts(codeSample: CharSequence): Boolean {
-        return true
     }
 }
 

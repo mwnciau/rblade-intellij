@@ -67,9 +67,10 @@
         <internalFileTemplate name="RBlade File"/>
 
         <multiHostInjector implementation="com.mwnciau.rblade.html.RBladeMultiHostInjector" order="first"/>
+        <stubElementTypeHolder class="com.mwnciau.rblade.stubs.RBladeStubElementTypes" externalIdPrefix="rblade"/>
     </extensions>
     <extensions defaultExtensionNs="org.jetbrains.plugins.ruby">
-        <templates.integration implementation="com.mwnciau.rblade.RubyRBladeIntegrationImpl" />
+        <templates.integration implementation="com.mwnciau.rblade.RubyRBladeTemplateIntegration" />
         <rails.viewFileTypesProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTypesProvider"/>
         <rails.viewFileTemplateProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTemplateProvider"/>
         <rubyLocalVariablesProvider implementation="com.mwnciau.rblade.ruby.RBladeRubyLocalVariablesProvider"/>

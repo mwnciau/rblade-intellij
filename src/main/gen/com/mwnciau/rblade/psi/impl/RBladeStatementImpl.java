@@ -30,7 +30,7 @@ public class RBladeStatementImpl extends ASTWrapperPsiElement implements RBladeS
   @Override
   @Nullable
   public RBladeStatementParameters getStatementParameters() {
-    return findChildByClass(RBladeStatementParameters.class);
+    return PsiTreeUtil.getChildOfType(this, RBladeStatementParameters.class);
   }
 
 }

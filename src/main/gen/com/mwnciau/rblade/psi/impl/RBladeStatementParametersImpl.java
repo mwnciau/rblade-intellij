@@ -30,7 +30,7 @@ public class RBladeStatementParametersImpl extends ASTWrapperPsiElement implemen
   @Override
   @Nullable
   public RBladeProps getProps() {
-    return findChildByClass(RBladeProps.class);
+    return PsiTreeUtil.getChildOfType(this, RBladeProps.class);
   }
 
 }

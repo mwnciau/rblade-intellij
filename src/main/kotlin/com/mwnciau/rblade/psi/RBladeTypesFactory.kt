@@ -3,15 +3,16 @@ package com.mwnciau.rblade.psi
 import com.intellij.lang.ASTNode
 import com.intellij.psi.templateLanguages.OuterLanguageElementImpl
 import com.intellij.psi.tree.IElementType
+import com.mwnciau.rblade.stubs.RBladeStubElementTypes
 
 interface RBladeTypesFactory {
   companion object {
     @JvmStatic
-    fun createElement(elementName: String): RBladeElementType
+    fun createElement(elementName: String): IElementType
     {
       return when (elementName) {
         "PROPS" -> RBladeElementType("PROPS")
-        "PROP_NAME" -> RBladeElementType("PROP_NAME")
+        "PROP_NAME" -> RBladeStubElementTypes.RBLADE_PROP_NAME
         "STATEMENT" -> RBladeElementType("STATEMENT")
         "STATEMENT_PARAMETERS" -> RBladeElementType("STATEMENT_PARAMETERS")
         else -> throw AssertionError ("Unknown element type: $elementName")

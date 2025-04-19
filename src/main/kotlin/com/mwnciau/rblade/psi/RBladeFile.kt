@@ -1,7 +1,25 @@
 package com.mwnciau.rblade.psi
 
-import org.jetbrains.plugins.ruby.ruby.lang.psi.RFile
+import com.intellij.extapi.psi.PsiFileBase
+import com.intellij.openapi.fileTypes.FileType
+import com.intellij.psi.FileViewProvider
+import com.intellij.psi.stubs.StubTree
+import com.intellij.psi.stubs.StubTreeLoader
+import com.mwnciau.rblade.RBladeFileType
+import com.mwnciau.rblade.RBladeLanguage
 
-interface RBladeFile : RFile {
-    fun getInnerRubyFile(): RFile
+class RBladeFile(viewProvider: FileViewProvider) :
+  PsiFileBase(viewProvider, RBladeLanguage.INSTANCE)
+{
+  override fun toString(): String {
+    return "RBladeFile:${this.name}"
+  }
+
+  override fun getFileType(): FileType {
+    return RBladeFileType.INSTANCE
+  }
+
+  override fun getStubTree(): StubTree? {
+    return StubTreeLoader.getInstance().readOrBuild(this.project, this.virtualFile, this) as StubTree?
+  }
 }

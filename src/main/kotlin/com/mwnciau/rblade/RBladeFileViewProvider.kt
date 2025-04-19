@@ -20,7 +20,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.ILightStubFileElementType
 import com.mwnciau.rblade.psi.RBladeElementTypes
 import com.mwnciau.rblade.psi.RBladeFile
-import com.mwnciau.rblade.psi.impl.RBladeRubyFileImpl
+import com.mwnciau.rblade.psi.RBladeRubyFile
 import com.mwnciau.rblade.ruby.RBladeRubyLanguage
 import org.jetbrains.plugins.ruby.ruby.lang.RubyLanguage
 
@@ -72,7 +72,7 @@ class RBladeFileViewProvider(
   override fun createFile(lang: Language): PsiFile? {
     return when (lang) {
       RubyLanguage.INSTANCE -> {
-        RBladeRubyFileImpl(this)
+        RBladeRubyFile(this)
       }
       templateDataLanguage -> {
         val parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang)
@@ -95,7 +95,7 @@ class RBladeFileViewProvider(
   }
 
   override fun getStubBindingRoot(): PsiFile {
-    return this.getPsi(RubyLanguage.INSTANCE) as PsiFile
+    return this.getPsi(RBladeLanguage.INSTANCE) as PsiFile
   }
 
   fun getRBladeFile(): RBladeFile {

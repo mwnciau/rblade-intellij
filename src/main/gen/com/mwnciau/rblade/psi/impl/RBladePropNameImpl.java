@@ -1,20 +1,27 @@
 // This is a generated file. Not intended for manual editing.
 package com.mwnciau.rblade.psi.impl;
 
-import java.util.List;
-import org.jetbrains.annotations.*;
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.util.PsiTreeUtil;
-import static com.mwnciau.rblade.psi.RBladeTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.mwnciau.rblade.psi.*;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.tree.IElementType;
+import com.mwnciau.rblade.psi.RBladePropName;
+import com.mwnciau.rblade.psi.RBladeVisitor;
+import com.mwnciau.rblade.stubs.RBladePropNameStub;
+import org.jetbrains.annotations.NotNull;
 
-public class RBladePropNameImpl extends ASTWrapperPsiElement implements RBladePropName {
+public class RBladePropNameImpl extends StubBasedPsiElementBase<RBladePropNameStub> implements RBladePropName {
+  public RBladePropNameImpl(@NotNull RBladePropNameStub stub, @NotNull IStubElementType<?, ?> type) {
+    super(stub, type);
+  }
 
   public RBladePropNameImpl(@NotNull ASTNode node) {
     super(node);
+  }
+
+  public RBladePropNameImpl(RBladePropNameStub stub, IElementType type, ASTNode node) {
+    super(stub, type, node);
   }
 
   public void accept(@NotNull RBladeVisitor visitor) {

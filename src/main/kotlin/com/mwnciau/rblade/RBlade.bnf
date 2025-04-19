@@ -22,4 +22,7 @@ private item_ ::= (statement|HTML_TEMPLATE|COMMENT)
 statement ::= RBLADE_STATEMENT (statement_parameters RBLADE_STATEMENT)?
 statement_parameters ::= props | (RUBY_EXPRESSION | RBLADE_STATEMENT_COMMA | RBLADE_STATEMENT_EACH_IN)+
 propName ::= RBLADE_STATEMENT_PROPS_NAME
+  {
+    stubClass="com.mwnciau.rblade.stubs.RBladePropNameStub"
+  }
 props ::= propName RBLADE_STATEMENT RUBY_EXPRESSION (RBLADE_STATEMENT_COMMA propName RBLADE_STATEMENT RUBY_EXPRESSION)*

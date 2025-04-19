@@ -9,7 +9,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.psi.impl.RFileImpl
 
 class RBladeRubyParserDefinition : RubyParserDefinition() {
     companion object {
-        val FILE = RBladeRubyElementType()
+        val FILE = RBladeRubyFileElementType()
     }
 
     override fun getFileNodeType(): IFileElementType {
@@ -20,4 +20,3 @@ class RBladeRubyParserDefinition : RubyParserDefinition() {
         return RFileImpl(viewProvider, RBladeRubyLanguage.INSTANCE)
     }
 }
-
