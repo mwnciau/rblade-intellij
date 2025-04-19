@@ -109,6 +109,10 @@ class RBladeRubyLocalVariablesProvider : RubyLocalVariablesProvider {
     }
 
     override fun setName(newName: @NonNls String): PsiElement? {
+      if (!isReadWriteAccessible()) {
+        return null
+      }
+
       val viewProvider = parent.containingFile.viewProvider as RBladeFileViewProvider
       val rbladeFile = viewProvider.getRBladeFile()
 
