@@ -48,4 +48,3 @@ class RBladeParserDefinition : ParserDefinition {
         return RBladeTypes.Factory.createElement(node)
     }
 }
-

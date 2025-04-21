@@ -20,6 +20,6 @@ class RBladeFile(viewProvider: FileViewProvider) :
   }
 
   override fun getStubTree(): StubTree? {
-    return StubTreeLoader.getInstance().readOrBuild(this.project, this.virtualFile, this) as StubTree?
+    return StubTreeLoader.getInstance().readOrBuild(project, virtualFile, this) as StubTree?
   }
 }

@@ -52,7 +52,7 @@
             filetype="RBlade"
             implementationClass="com.mwnciau.rblade.highlighter.RBladeEditorHighlighterProvider"/>
         <completion.contributor
-            language="RBlade"
+            language="any"
             implementationClass="com.mwnciau.rblade.completion.RBladeCompletionContributor"/>
         <lang.fileViewProviderFactory
             language="RBlade"
