@@ -10,6 +10,7 @@ import com.intellij.psi.impl.source.PsiFileWithStubSupport
 import com.intellij.psi.stubs.PsiFileStubImpl
 import com.intellij.psi.stubs.StubTree
 import com.intellij.psi.stubs.StubTreeLoader
+import com.intellij.util.concurrency.ThreadingAssertions
 import com.mwnciau.rblade.RBladeFileType
 import com.mwnciau.rblade.RBladeLanguage
 import java.lang.ref.SoftReference
@@ -34,7 +35,11 @@ class RBladeFile(viewProvider: FileViewProvider) :
   }
 
   override fun getStubTree(): StubTree? {
-    ApplicationManager.getApplication().assertReadAccessAllowed()
+    if (virtualFile == null || !virtualFile.isValid) {
+      return null
+    }
+
+    ThreadingAssertions.assertReadAccess()
 
     stubRef?.get()?.let { return it }
 
