@@ -59,9 +59,6 @@
         <lang.inspectionSuppressor
             language="HTML"
             implementationClass="com.mwnciau.rblade.inspections.HtmlInspectionSuppressor"/>
-        <lang.inspectionSuppressor
-            language="ruby"
-            implementationClass="com.mwnciau.rblade.inspections.RubyInspectionSuppressor"/>
         <liveTemplateContext contextId="RBlade" implementation="com.mwnciau.rblade.RBladeLiveTemplateContextType" />
         <internalFileTemplate name="RBlade File"/>
 
