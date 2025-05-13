@@ -97,6 +97,9 @@ class RBladeStatementTest : RBladeTest() {
 
     // "a" is not a valid percent-string delimiter
     assertLexesTo("@if(%qa)a, 2)", "RBLADE:@if(", "RB:%qa", "RBLADE:)", "a, 2)")
+
+    // ? does should escape a character when preceded by a word character
+    assertLexesTo("@if(user.present?)", "RBLADE:@if(", "RB:user.present?", "RBLADE:)")
   }
 
   @Test

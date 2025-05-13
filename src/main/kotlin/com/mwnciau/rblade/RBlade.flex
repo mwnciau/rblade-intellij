@@ -176,9 +176,11 @@ STRING_START_CHARACTERS=[\"'%?]
     return RBladeTypes.RBLADE_STATEMENT;
   }
   [^\@]+ {
+    checkLastChar();
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \@ {
+    lastCharacterWasWord = false;
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
@@ -259,38 +261,43 @@ STRING_START_CHARACTERS=[\"'%?]
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \?[^] {
+    if (lastCharacterWasWord) {
+      yypushback(1);
+    }
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
 
 <STATE_RUBY_BLOCK, STATE_PROPS_STATEMENT_VALUE> {
   \) {
+    lastCharacterWasWord = false;
     currentStatement = "";
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
   \( {
+    lastCharacterWasWord = false;
     stateStack.addFirst(yystate());
     yybegin(MATCHED_PARENTHESES);
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \{ {
+    lastCharacterWasWord = false;
     stateStack.addFirst(yystate());
     yybegin(MATCHED_BRACES);
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \[ {
+    lastCharacterWasWord = false;
     stateStack.addFirst(yystate());
     yybegin(MATCHED_BRACKETS);
-    return RBladeTypes.RUBY_EXPRESSION;
-  }
-  \?[^] {
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
 
 <STATE_RUBY_BLOCK> {
   \s+in\s+ {
+    lastCharacterWasWord = false;
     if (currentStatement.startsWith("each")) {
       return RBladeTypes.RBLADE_STATEMENT_EACH_IN;
     }
@@ -298,6 +305,7 @@ STRING_START_CHARACTERS=[\"'%?]
     return RBladeTypes.RUBY_EXPRESSION;
   }
   , {
+    lastCharacterWasWord = false;
     if (naryStatements.contains(currentStatement)) {
       return RBladeTypes.RBLADE_STATEMENT_COMMA;
     } else {
@@ -305,15 +313,18 @@ STRING_START_CHARACTERS=[\"'%?]
     }
   }
   [^{STRING_START_CHARACTERS}\[(){,\s]+ {
+    checkLastChar();
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^\[(){] {
+    lastCharacterWasWord = false;
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
 
 <STATE_PROPS_STATEMENT_NAME> {
   \) {
+    lastCharacterWasWord = false;
     yybegin(YYINITIAL);
     return RBladeTypes.RBLADE_STATEMENT;
   }
@@ -322,73 +333,90 @@ STRING_START_CHARACTERS=[\"'%?]
     return RBladeTypes.RBLADE_STATEMENT_PROPS_NAME;
   }
   \s+ {
+    lastCharacterWasWord = false;
     return RBladeTypes.RBLADE_STATEMENT;
   }
 }
 <STATE_PROPS_STATEMENT_COLON> {
   \s*:\s* {
+    lastCharacterWasWord = false;
     yybegin(STATE_PROPS_STATEMENT_VALUE);
     return RBladeTypes.RBLADE_STATEMENT;
   }
 }
 <STATE_PROPS_STATEMENT_VALUE> {
   [^{STRING_START_CHARACTERS}\[(){,]+ {
+    checkLastChar();
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \s*,\s* {
+    lastCharacterWasWord = false;
     yybegin(STATE_PROPS_STATEMENT_NAME);
     return RBladeTypes.RBLADE_STATEMENT_COMMA;
   }
   [^\[(){] {
+    lastCharacterWasWord = false;
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
 
 <MATCHED_PARENTHESES> {
   \) {
+    lastCharacterWasWord = false;
     yybegin(stateStack.removeFirst());
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \( {
+    lastCharacterWasWord = false;
     stateStack.addFirst(MATCHED_PARENTHESES);
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^@{STRING_START_CHARACTERS}()]+ {
+    checkLastChar();
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
+    lastCharacterWasWord = false;
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
 <MATCHED_BRACES> {
   \} {
+    lastCharacterWasWord = false;
     yybegin(stateStack.removeFirst());
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \{ {
+    lastCharacterWasWord = false;
     stateStack.addFirst(MATCHED_BRACES);
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^@{STRING_START_CHARACTERS}{}]+ {
+    checkLastChar();
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
+    lastCharacterWasWord = false;
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
 <MATCHED_BRACKETS> {
   \] {
+    lastCharacterWasWord = false;
     yybegin(stateStack.removeFirst());
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \[ {
+    lastCharacterWasWord = false;
     stateStack.addFirst(MATCHED_BRACKETS);
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^@{STRING_START_CHARACTERS}\[\]]+ {
+    checkLastChar();
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
+    lastCharacterWasWord = false;
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
@@ -402,6 +430,7 @@ STRING_START_CHARACTERS=[\"'%?]
   }
   [^] {
     if (yycharat(0) == blockStack.getFirst()) {
+      checkLastChar();
       blockStack.removeFirst();
       yybegin(stateStack.removeFirst());
     }
@@ -415,6 +444,7 @@ STRING_START_CHARACTERS=[\"'%?]
     return RBladeTypes.RUBY_EXPRESSION;
   }
   #\{ {
+    lastCharacterWasWord = false;
     stateStack.addFirst(STATE_STRING_INTERPOLATED_LITERAL);
     yybegin(STATE_STRING_INTERPOLATION);
     return RBladeTypes.RUBY_EXPRESSION;
@@ -424,6 +454,7 @@ STRING_START_CHARACTERS=[\"'%?]
   }
   [^] {
     if (yycharat(0) == blockStack.getFirst()) {
+      checkLastChar();
       blockStack.removeFirst();
       yybegin(stateStack.removeFirst());
     }
@@ -438,13 +469,16 @@ STRING_START_CHARACTERS=[\"'%?]
     return RBladeTypes.RUBY_EXPRESSION;
   }
   \{ {
+    lastCharacterWasWord = false;
     stateStack.addFirst(STATE_STRING_INTERPOLATION);
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^\{\}@{STRING_START_CHARACTERS}]+ {
+    checkLastChar();
     return RBladeTypes.RUBY_EXPRESSION;
   }
   [^] {
+    lastCharacterWasWord = false;
     return RBladeTypes.RUBY_EXPRESSION;
   }
 }
