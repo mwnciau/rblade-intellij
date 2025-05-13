@@ -87,6 +87,6 @@ class RBladeStatementCompletionProvider : CompletionProvider<CompletionParameter
   }
 
   override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, resultSet: CompletionResultSet) {
-    resultSet.addAllElements(STATEMENTS.map { statement -> LookupElementBuilder.create(statement) })
+    resultSet.addAllElements(STATEMENTS.map { statement -> LookupElementBuilder.create(statement).withTypeText("RBlade").withPresentableText("@" + statement) })
   }
 }
