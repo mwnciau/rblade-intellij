@@ -6,28 +6,13 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.tree.IElementType
 import com.mwnciau.rblade.psi.RBladeFile
-import com.mwnciau.rblade.psi.RBladeTypes
-import org.jetbrains.plugins.ruby.ruby.lang.lexer.RubyTokenTypes
 import org.jetbrains.plugins.ruby.ruby.lang.psi.controlStructures.blocks.RCompoundStatement
 import org.jetbrains.plugins.ruby.ruby.lang.psi.expressions.RExpression
 import org.jetbrains.plugins.ruby.templates.TemplateIntegration
 import org.jetbrains.plugins.ruby.templates.TemplateIntegrationUtils
 
 class RubyRBladeTemplateIntegration : TemplateIntegration {
-  override fun getOuterElements(): MutableCollection<out IElementType> {
-    return mutableListOf(RBladeTypes.RBLADE_INJECTION_IN_RUBY)
-  }
-
-  override fun getContinuationElements(): MutableCollection<out IElementType> {
-    return mutableListOf()
-  }
-
-  override fun getEndElements(): MutableCollection<out IElementType> {
-    return mutableListOf(RubyTokenTypes.kEND)
-  }
-
   override fun isTemplateFile(file: PsiFile?): Boolean {
     return file is RBladeFile
   }

@@ -17,11 +17,9 @@
 
     <change-notes>
         <![CDATA[
-            <h2>1.2.2 changes</h2>
+            <h2>2.0.0 changes</h2>
             <ul>
-                <li>Fix issue with lexing question marks in RBlade statements (#13)</li>
-                <li>Fix issue with stub tree being loaded prematurely</li>
-                <li>Fix RBlade statement completions</li>
+                <li>Update for RubyMine 2025.1</li>
             </ul>
         ]]>
     </change-notes>

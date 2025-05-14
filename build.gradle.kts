@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.0.21"
-    id("org.jetbrains.intellij.platform") version "2.1.0"
+    id("org.jetbrains.kotlin.jvm") version "2.1.21"
+    id("org.jetbrains.intellij.platform") version "2.5.0"
 }
 
 group = "com.mwnciau"
-version = "1.2.2"
+version = "2.0.0"
 
 repositories {
   mavenCentral()
@@ -20,13 +20,12 @@ repositories {
 
 dependencies {
   intellijPlatform {
-    rubymine("2024.2")
+    rubymine("2025.1")
 
     bundledPlugin("org.jetbrains.plugins.ruby")
 
     pluginVerifier()
     zipSigner()
-    instrumentationTools()
 
     testFramework(TestFrameworkType.Platform)
     testFramework(TestFrameworkType.Plugin.Ruby)
@@ -57,7 +56,7 @@ tasks {
   }
 
   patchPluginXml {
-      sinceBuild.set("233")
+      sinceBuild.set("250")
       untilBuild.set(provider { null })
   }
 
