@@ -17,9 +17,10 @@
 
     <change-notes>
         <![CDATA[
-            <h2>2.0.0 changes</h2>
+            <h2>2.0.1 changes</h2>
             <ul>
-                <li>Update for RubyMine 2025.1</li>
+                <li>Fix unexpected token errors when exiting embedded Ruby</li>
+                <li>Restore statement completion</li>
             </ul>
         ]]>
     </change-notes>
