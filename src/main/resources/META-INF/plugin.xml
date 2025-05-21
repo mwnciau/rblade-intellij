@@ -72,6 +72,7 @@
     </extensions>
     <extensions defaultExtensionNs="org.jetbrains.plugins.ruby">
         <templates.integration implementation="com.mwnciau.rblade.RubyRBladeTemplateIntegration" />
+        <templates.elements.provider implementation="com.mwnciau.rblade.parser.RBladeRubyElementsProvider"/>
         <rails.viewFileTypesProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTypesProvider"/>
         <rails.viewFileTemplateProvider implementation="com.mwnciau.rblade.rails.RBladeRailsViewFileTemplateProvider"/>
         <rubyLocalVariablesProvider implementation="com.mwnciau.rblade.ruby.RBladeRubyLocalVariablesProvider"/>
