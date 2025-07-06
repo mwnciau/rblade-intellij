@@ -17,10 +17,10 @@
 
     <change-notes>
         <![CDATA[
-            <h2>2.0.1 changes</h2>
+            <h2>2.0.2 changes</h2>
             <ul>
-                <li>Fix unexpected token errors when exiting embedded Ruby</li>
-                <li>Restore statement completion</li>
+                <li>Fix issue with inconsistent highlighting</li>
+                <li>Fix issue where RBlade print statements were causing incorrect lexing of HTML</li>
             </ul>
         ]]>
     </change-notes>
