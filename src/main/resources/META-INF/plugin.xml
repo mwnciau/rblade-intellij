@@ -68,6 +68,12 @@
         <liveTemplateContext contextId="RBlade" implementation="com.mwnciau.rblade.RBladeLiveTemplateContextType" />
         <internalFileTemplate name="RBlade File"/>
 
+        <!-- Replaces  injected outer element types with a dummy string, ensuring the injections don't break the HTML lexer -->
+        <outerLanguageRangePatcher
+            language="HTML"
+            implementationClass="com.mwnciau.rblade.html.HtmlOuterLanguageRangePatcher"
+        />
+
         <multiHostInjector implementation="com.mwnciau.rblade.html.RBladeMultiHostInjector" order="first"/>
         <stubElementTypeHolder class="com.mwnciau.rblade.stubs.RBladeStubElementTypes" externalIdPrefix="rblade"/>
     </extensions>
