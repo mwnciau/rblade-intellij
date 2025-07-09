@@ -132,7 +132,7 @@ class RBladeRubyLocalVariablesProvider : RubyLocalVariablesProvider {
     }
 
     override fun equals(other: Any?): Boolean {
-      return if (this == other) {
+      return if (this === other) {
         true
       } else if (other != null && other is RBladeFakePSIVariable) {
         parent == other.parent && name == other.name && textOffset == other.textOffset
