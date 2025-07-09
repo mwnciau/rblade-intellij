@@ -17,10 +17,9 @@
 
     <change-notes>
         <![CDATA[
-            <h2>2.0.2 changes</h2>
+            <h2>2.0.3 changes</h2>
             <ul>
-                <li>Fix issue with inconsistent highlighting</li>
-                <li>Fix issue where RBlade print statements were causing incorrect lexing of HTML</li>
+                <li>Fix template data not being highlighted</li>
             </ul>
         ]]>
     </change-notes>

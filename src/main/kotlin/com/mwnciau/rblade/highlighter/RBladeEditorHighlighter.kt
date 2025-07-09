@@ -37,24 +37,21 @@ class RBladeEditorHighlighter(
             currentTemplateLanguage = templateLanguage
             val templateLanguageHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(currentTemplateLanguage as Language, project, virtualFile)
             this.registerLayer(RBladeTypes.HTML_TEMPLATE, LayerDescriptor(templateLanguageHighlighter, "", null))
-
-            return true
-        } else {
-            return false
         }
+
+        return true
     }
 
 
     private fun getCurrentTemplateLanguageAndPrefixes(): Language {
         if (virtualFile !is VirtualFileWindow && virtualFile != null && project != null) {
             val viewProvider = PsiManager.getInstance(project).findViewProvider(virtualFile)
-            return if (viewProvider is TemplateLanguageFileViewProvider) {
-                viewProvider.templateDataLanguage
-            } else {
-                HTMLLanguage.INSTANCE
+
+            if (viewProvider is TemplateLanguageFileViewProvider) {
+                return viewProvider.templateDataLanguage
             }
-        } else {
-            return HTMLLanguage.INSTANCE
         }
+
+        return HTMLLanguage.INSTANCE
     }
 }
